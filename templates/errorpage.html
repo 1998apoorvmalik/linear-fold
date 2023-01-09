@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>LinearFold Web Server (beta)</title>
+<link rel="stylesheet" type="text/css" href="/css/showCircle.css">
+
+</head>
+
+<body>
+<div id="pageTitle">LinearFold Web Server (beta)</div>
+<br><br><br>
+<!--
+<a class="jumpLink" href="http://linearfold.eecs.oregonstate.edu:8080" style="font-size:130%;"> &nbsp; back to homepage&nbsp; </a>
+-->
+<a class="btn-back" href="http://linearfold.eecs.oregonstate.edu">
+  <span> &nbsp; back to homepage &nbsp;</span>
+</a><br><br>
+ 
+
+<div>
+   <p>wrong input, supposed to be <b>FASTA</b> format, only <span style="color:red"><b>A/U/C/G/N</b></span>, or <span style="color:red"><b>line breaks</b></span> in a sequence:</p>
+   <p>Sample:</p>
+   <div style="font-size:16px">>name</div>
+   <div style="font-size:16px">GGUUAAGCGACUAAGCGUACACGGUGGAUGCCCUGGCAGUCAGAGGCGAUGAAGG</div>
+   <br><br>
+   <p>Your input:</p>
+   <div style="font-size:16px; max-width:160ch;">{{text}}</div>
+   <!--
+   <div style="font-size:16px; max-width:160ch; word-wrap:break-word;">{{text}}</div>
+   -->
+</body>
+</html>

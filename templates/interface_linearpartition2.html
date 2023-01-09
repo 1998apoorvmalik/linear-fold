@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>LinearFold Web Server (beta)</title>
+		<meta charset="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="/css/interface.css">
+                <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+	</head>
+
+	<body>
+            <div id="pageTitle">LinearPartition Web Server (beta) <div class="nav-right"><a href="{{ url_for('my_form_old') }}">LinearFold</a> &nbsp&nbsp&nbsp <a href="{{ url_for('my_form_LP') }}" class="nav-act">LinearPartition</a>&nbsp&nbsp&nbsp
+        <a href="{{ url_for('my_form_LS_v') }}">LinearSampling</a>
+        &nbsp&nbsp&nbsp<a href="{{ url_for('my_form_LTF') }}">LinearTurboFold</a>
+        &nbsp&nbsp&nbsp<a href="{{ url_for('my_form_LS') }}">LinearSankoff</a>
+</div></div>
+            <!--<form action="/action_go.php">-->
+            <br><br>
+
+            <fieldset class="bigfield">
+            <legend>Interactive demo</legend>
+	       <form method="POST" class="userSeq" enctype="multipart/form-data">
+                  <fieldset>
+                    <legend><I>Add a sequence</I></legend>
+	            <b>Paste</b> or <b>type</b> your sequence here (length &lt; 100,000): <br>
+    		    <!--<textarea name="seqInput" id="seqInput" rows="10" cols="120" placeholder=">name &#x0a;GGUUAAGCGACUAAGCGUACACGGUGGAUGCCCUGGCAGUCAGAGGCGAUGAAGG" ></textarea>-->
+    		    <!--<textarea name="seqInput" id="seqInput" rows="10" cols="120">>name&#x0a;GGUUAAGCGACUAAGCGUACACGGUGGAUGCCCUGGCAGUCAGAGGCGAUGAAGG</textarea>-->
+    		    <textarea name="seqInput" id="seqInput" rows="10" cols="120">>name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU</textarea>
+
+                    <div class="dropdown-sample">
+                      <button class="dropbtn-sample">Samples <small>▼</small></button>
+                      <div class="dropdown-sample-content">
+                        <span onclick="sampleInput(0)" id='sample1'>sample1: tRNA_tdbR00000566-Homo_sapiens-9606-Tyr-9PA (len:76)</span>
+                        <span onclick="sampleInput(1)" id='sample2'>sample2: SRP_Oryz.sati._AC079888 (len:311)</span>
+                        <span onclick="sampleInput(2)" id='sample3'>sample3: 16S rRNA_A.pyrophilus (len:1564)</span>
+                        <span onclick="sampleInput(3)" id='sample4'>sample4: 23S rRNA_T.thermophilus (len:2915)</span>
+                      </div>
+                    </div> <br>
+
+		    Or <b>upload</b> a file in FASTA format: <br>
+		    <div class="file-upload">
+		      <div class="file-select">
+		        <div class="file-select-button" id="fileName">Choose File</div>
+		        <div class="file-select-name" id="noFile">No file chosen...</div>
+		        <input type="file" name="seqFile" id="seqFile" accept=".txt, .fasta"><br>
+		        <!--
+		        <input type="file" name="seqFile" id="seqFile" accept=".txt" onchange=loaded()>
+		        <input type="file" name="seqFile" id="seqFile" accept=".txt" onchange="form.submit()">
+		    	-->
+		      </div>
+		    </div>
+                  </fieldset> <br>
+                  <!--
+                  <fieldset>
+                    <legend><I>Set beam size</I></legend>
+		    <b>Beam size</b> (1-200):
+		    <input type="text" name="beamSize" id='beamSize' placeholder="100" maxlength="3" size="10" ><br>
+                  </fieldset> <br>
+                  -->
+
+                  <fieldset>
+                    <legend><I>Available model(s)</I></legend>
+                    <input type="checkbox" id="cfbox" name="cfbox" value="cfbox" checked>
+                    <label for="cfbox"><b>LinearPartition-C</b> (using <a href="http://contra.stanford.edu/contrafold/" target="_blank">CONTRAfold v2.0</a> machine-learned model, Do et al 2006)</label><br>
+
+                    <input type="checkbox" id="vnbox" name="vnbox" value="vnbox" checked disabled>
+                    <label for="vnbox"><b>LinearPartition-V</b> (using <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a> thermodynamic model, Lorenz et al 2011, with parameters from Mathews et al 2004)</label>
+                  </fieldset> <br>
+
+		    <input type="submit" value="Run LinearPartition >>" onclick="loading()">&nbsp &nbsp &nbsp<input type="reset" value="Reset" />
+		</form> <div id='loadingIMG' style="display:none"><img src='https://raw.githubusercontent.com/KaiboLiu/PairingWebDemo/master/img/loading1.gif' alt='Loading...' height='160'></div>
+            </fieldset>
+            <br><br>
+            <!--
+            <fieldset class="bigfield">
+                <legend>Preset demo</legend>
+		<p>Example demos for <span class="coloredSeq">16S rRNA</span>/<span class="coloredSeq">23S rRNA</span>/<span class="coloredSeq">Group I Intron</span> are available, compared with <a href="http://contra.stanford.edu/contrafold/" target="_blank">CONTRAfold v2.0</a> and <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a> algorithms. </p>
+		<a href="http://linearfold.eecs.oregonstate.edu/preset.html"><button type="button" id="jumpBtn">Go to demos >> </button></a>
+            </fieldset>
+            -->
+
+            <br>
+     <div id="bottomInfo" style="font-size:19px;">
+          <div id="LiangGroup">
+             <p>
+               <p>Please cite the following paper:</p>
+               <div style="font-size:19px;">He Zhang, Liang Zhang, David H. Mathews and Liang Huang(2019). <B><a href="https://arxiv.org/pdf/1912.13190.pdf" target="_blank">LinearPartition: Linear-Time Approximation of RNA Folding Partition Function and Base Pairing Probabilities</a></B>. <I>arXiv Preprint</I> </div>
+             </p>
+             <div>Code: <a href="https://github.com/LinearFold/LinearPartition" class="fa fa-github" target="_blank" style="text-decoration: none"> github</a> <!--(implemented by <b><a href="https://eecs.oregonstate.edu/people/Zhang-He" target="_blank">He Zhang</a></b>, and <b><a href="http://web.engr.oregonstate.edu/~huanlian/" target="_blank">Liang Huang</a></b>) --></div>
+             <!--<div style="font-size:14px">-->
+             <!--
+             <div>Web Demo designed by <b><a href="https://kaiboliu.github.io" target="_blank">Kaibo Liu</a></b> (liukaib_AT_oregonstate.edu)</div>
+             -->
+             <br>
+             <!--
+             <div style="font-size:14px">* Dezhong Deng, Kai Zhao, David Hendrix, David H. Mathews, and Liang Huang (2018). <I>Linear-Time Prediction of RNA Secondary Structures</I>. <a href="https://www.biorxiv.org/content/early/2018/02/14/263509" target="_blank">bioRxiv</a>.</div>
+             -->
+           <div id="other">
+               Some Other RNA Secondary Structure Prediction Web Servers
+               <br>
+               <a href="http://rna.tbi.univie.ac.at/cgi-bin/RNAWebSuite/RNAfold.cgi" target="_blank">RNAfold</a> (Vienna)&nbsp&nbsp
+               <a href="https://rna.urmc.rochester.edu/RNAstructureWeb/Servers/Predict1/Predict1.html" target="_blank">RNAstructure</a> (Rochester)&nbsp&nbsp
+               <a href="http://contra.stanford.edu/contrafold/server.html" target="_blank">CONTRAfold</a> (Stanford)&nbsp&nbsp
+               <a href="http://unafold.rna.albany.edu/?q=mfold" target="_blank">Mfold</a> (Albany)&nbsp&nbsp
+               <a href="https://www.ncrna.org/softwares/" target="_blank">CentroidFold</a> (JBIC)&nbsp&nbsp
+           </div>
+
+
+            <div id="mapdiv">
+               <script type="text/javascript" id="clustrmaps" src="//cdn.clustrmaps.com/map_v2.js?d=hHPj_aeE0s4t_cVRzJUcpQVv-okqDLlNGnMrsl0Osf0&cl=ffffff&w=a" height='160'></script>
+            </div>
+
+      	  </div><br>
+
+     </div>
+
+
+            <!-- plugin-twitter-->
+            <!--
+            <div id="sharelink">
+               <br>
+               <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+               <br>
+               <iframe src="https://www.facebook.com/plugins/like.php?href=http%3A%2F%2Flinearfold.eecs.oregonstate.edu%3A8080%2F&width=106&layout=button_count&action=like&size=small&show_faces=true&share=true&height=46&appId" width="106" height="46" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+            </div>
+            -->
+            <!-- end of plugin-twitter-->
+
+
+	<script src="/js/jquery.min.js"></script>
+
+      <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those Files -->
+        <script type="text/javascript" language="javascript">
+        var versionUpdate = (new Date()).getTime();
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "/js/interface.js?v=" + versionUpdate;
+        document.body.appendChild(script);
+        </script>
+
+       </body>
+</html>

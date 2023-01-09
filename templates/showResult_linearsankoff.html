@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>LinearFold Web Server (beta)</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+    />
+  </head>
+  <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those     Files -->
+  <script type="text/javascript" language="javascript">
+    var versionUpdate = new Date().getTime();
+    var csslink = document.createElement("link");
+    csslink.rel = "stylesheet";
+    csslink.type = "text/css";
+    csslink.href = "/css/interface.css?v=" + versionUpdate;
+    document.head.appendChild(csslink);
+  </script>
+
+  <body>
+    <div id="pageTitle">
+      LinearSankoff Web Server (beta)
+      <div class="nav-right">
+        <a href="{{ url_for('my_form_old') }}">LinearFold</a> &nbsp&nbsp&nbsp
+        <a href="{{ url_for('my_form_LP') }}">LinearPartition</a>
+        &nbsp&nbsp&nbsp
+        <a href="{{ url_for('my_form_LS_v') }}">LinearSampling</a>
+        &nbsp&nbsp&nbsp<a href="{{ url_for('my_form_LTF') }}"
+          >LinearTurboFold</a
+        >
+        &nbsp&nbsp&nbsp<a href="{{ url_for('my_form_LS') }}" class="nav-act"
+          >LinearSankoff</a
+        >
+      </div>
+    </div>
+
+    <h5>{{ result }}</h5>
+
+    <script src="/js/jquery.min.js"></script>
+
+    <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those Files -->
+    <script type="text/javascript" language="javascript">
+      var versionUpdate = new Date().getTime();
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "/js/interface.js?v=" + versionUpdate;
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>

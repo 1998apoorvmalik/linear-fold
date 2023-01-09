@@ -1,0 +1,153 @@
+{% extends "header_interface.html" %}
+{% block content %}
+
+
+      <div class="container">
+          <div class="card border-primary mb-3">
+              <div class="card-header" id="runTitle">Run LinearTurboFold</div>
+              <form method="POST" class="userSeq" enctype="multipart/form-data"> <!-- target="_blank"  -->
+                <div class="card-body">
+                  Check <a href="{{ url_for('showRes_LTF_preset') }}">this link</a> for pre-computed SARS-CoV-2 Results
+                  <br>
+                  <br>
+                    <h4 class="card-title" id="addTitle">Add Sequences</h4>
+                    <div class="card-text"><span id='addIntro'><b>Paste</b> or <b>type</b> RNA sequences here (length &lt; 1,000) in the FASTA format: </span>
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown" style="position:relative;left: 40px">
+                          <div class="btn-group" role="group">
+                            <button id="btnGroupDrop2" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Samples</button>
+                            <!-- <div class="dropdown-menu dropdown-sample-content" aria-labelledby="btnGroupDrop2" style=""> -->
+                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop2" style="">
+                              <span class="dropdown-item" onclick="sampleInputs(0)" id='sample1'>5 seqs (210-283nt): Babe.bige._GSP-5866/Enta.hist._AF487684/Leis.infa._AM502223/Tetr.ther._X56981/Tryp.bruc._AF047723</span>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <!-- <br>  -->
+                    <textarea name="seqInput" id="seqInput" rows="7" cols="100" style="color:lightgrey;width:80%" onInput="update_textarea(this)">>name1&#x0a;GGUUAAGCGACUAAGCGUACACGGUGGAUGCCCUGGCAGUCAGAGGCGAUGAAGG&#x0a;>name2&#x0a;GGUAAAGCGACUAUGCGUACACGGUUGAUGCCCUGGCAGUCAGAGGCGAUGAAGG</textarea>
+                    <p id="orUploadIntro">Or <b>upload</b> a file in FASTA format</p>
+                    <div class="file-upload">
+                      <div class="file-select">
+                        <div class="file-select-button" id="fileName">Choose File</div>
+                        <div class="file-select-name" id="noFile">No file chosen...</div>
+                        <input type="file" name="seqFile" id="seqFile" accept=".txt, .fasta"><br>
+                        <!--
+                        <input type="file" name="seqFile" id="seqFile" accept=".txt" onchange=loaded()>
+                        <input type="file" name="seqFile" id="seqFile" accept=".txt" onchange="form.submit()">
+                        -->
+                      </div>
+                    </div>
+
+                    <br>
+                    <h5 class="card-title" id="availModel">Available parameter</h5>
+                    <!--
+                    <input type="checkbox" id="vnboxModel" name="vnbox" value="vnboxModel" checked disabled>
+                      <label for="vnboxModel" id="lfv_model"><b>LinearFold-V</b>（using <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a> thermodynamic model, Lorenz et al 2011, with parameters from Mathews et al 2004）</label><br>
+                    -->
+                    <!--beam size 1-->
+
+                    <label for="foldingBeam"><b>Folding Beam Size</b>
+                      <input type="text" name="foldingBeam" id="foldingBeam" placeholder="100" maxlength="3" size="10" value="">
+                    </label>
+                    <!--beam size 2-->
+                    <br>
+
+                    <label for="alignmentBeam"><b>Alignment Beam Size</b>
+                      <input type="text" name="alignmentBeam" id="alignmentBeam" placeholder="100" maxlength="3" size="10" value="">
+                    </label>
+                    <br>
+                    <!--Iteration -->
+
+                    <label for="iterationNum"><b>Iteration</b>
+                      <input type="text" name="iterationNum" id="iterationNum" placeholder="3" maxlength="3" size="10" value="">
+                    </label>
+                    <br>
+                    <!--Threshknot Threshold-->
+
+                    <label for="ThreshknotNum"><b>Threshknot Threshold</b>
+                      <input type="text" name="ThreshknotNum" id="ThreshknotNum" placeholder="0.3" maxlength="3" size="10" value="">
+                    </label>
+
+                    <br>
+
+                    <input type="text" name="jobID" id="jobID" placeholder="25" maxlength="20" size="10" value="123" hidden>
+
+
+
+                    <!-- <input type="submit" value="运行LinearDesign >>" onclick="loading()">&nbsp &nbsp &nbsp -->
+                    <!--<input type="submit" id="submit" class="btn btn-primary" value="Run LinearFold >>" onclick="loading()" disabled>&nbsp &nbsp &nbsp-->
+                    <input type="submit" id="submit" class="btn btn-primary" value="Run LinearTurboFold >>" onclick="loading()">&nbsp &nbsp &nbsp
+                    <input type="reset" id="reset" value="Reset" onClick="$('#seqInput').css('color','lightgrey'); $('#submit').prop('disabled', true)">
+
+                </div>
+              </form>
+
+
+              <div id='loadingIMG' style="display:none"><span id='waittime'></span><img src='https://raw.githubusercontent.com/KaiboLiu/PairingWebDemo/master/img/loading1.gif' alt='Loading...' height='160'></div>
+
+          </div>
+
+
+          <br><br>
+
+
+          <div class="card border-primary mb-3" hidden>
+              <div class="card-header">LinearPartition</div>
+              <div class="card-body">
+	          <div class="card-text">
+                      <p>Interactive demos for LinearPartition (using <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a> thermodynamic model, Lorenz et al 2011, with parameters from Mathews et al 2004) </p>
+	          </div>
+	          <a href="{{ url_for('my_form_LP') }}"><button type="button" class="btn btn-primary">Go to LinearPartition >> </button></a>
+              </div>
+          </div>
+
+          <div class="card border-primary mb-3">
+              <div class="card-header" id="aboutTitle">About LinearTurboFold</div>
+              <div class="card-body">
+                  <p class="text-primary" id="citeTitle">Please cite the following paper: </p>
+                  <!-- <div style="font-size:19px;"> -->
+                  <div>
+                    Sizhen Li, He Zhang, Liang Zhang, Kaibo Liu, Boxiang Liu, David H. Mathews*, Liang Huang* (2021). <B><a href="https://www.pnas.org/content/118/52/e2116269118" target="_blank"> LinearTurboFold: Linear-time global prediction of conserved structures for RNA homologs with applications to SARS-CoV-2</a></B> <I>PNAS</I> 2021-12
+                    <p style="font-size:80%;">
+                    *Corresponding Author
+                    </p>
+                  </div>
+
+                  <br><br>
+              </div>
+
+          </div>
+
+
+      </div>
+
+          <!-- plugin-twitter-->
+          <!--
+          <div id="sharelink">
+             <br>
+             <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+             <br>
+             <iframe src="https://www.facebook.com/plugins/like.php?href=http%3A%2F%2Flinearfold.eecs.oregonstate.edu%3A8080%2F&width=106&layout=button_count&action=like&size=small&show_faces=true&share=true&height=46&appId" width="106" height="46" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+          </div>
+          -->
+          <!-- end of plugin-twitter-->
+
+
+      <script src="/js/jquery.min.js"></script>
+      <!-- <script src="/js/jquery-3.2.1.slim.min.js"></script> -->
+      <script src="/js/popper.min.js"></script>
+      <script src="/js/bootstrap.min.js"></script>
+
+      <script type="text/javascript" language="javascript">
+        var versionUpdate = (new Date()).getTime();
+        // var script = document.createElement("script");
+        // script.type = "text/javascript";
+        // script.src = "/js/language_en2cn.js?v=" + versionUpdate;
+        // document.body.appendChild(script);
+
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "/js/interface.js?v=" + versionUpdate;
+        document.body.appendChild(script);
+      </script>
+
+{% endblock %}

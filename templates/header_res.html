@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>LinearTurboFold Web Server</title>
+
+      <!-- <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script> -->
+      <script src="/js/jquery.min.js"></script>
+      <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
+      <!--<script type="text/javascript" src="/js/gstatic-charts-loader.js"></script>-->
+
+      <link rel="stylesheet" href="/css/cerulean_bootstrap.css">
+      <link rel="stylesheet" href="/css/cerulean_custom.min.css">
+      <!-- <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"> -->
+      <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+      <!-- <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,900,900i"> -->
+      <!--<link rel="stylesheet" type="text/css" href="/css/fonts-Merriweather.css">-->
+      <!-- <link rel="stylesheet" type="text/css" href="/css/showCircle_with_boots.css"> -->
+
+      <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those Files -->
+      <script type="text/javascript" language="javascript">
+        var versionUpdate = (new Date()).getTime();
+        var csslink = document.createElement("link");
+        csslink.rel = "stylesheet";
+        csslink.type = "text/css";
+        csslink.href = "/css/showCircle_with_boots.css?v=" + versionUpdate;
+        document.head.appendChild(csslink);
+      </script>
+  </head>
+
+<body>
+
+      <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
+          <div class="container">
+            <!-- <span id="pageTitle" class="navbar-brand">LinearDesign网页服务器(beta) </span> -->
+            <a href="{{ url_for(request.endpoint|replace('showRes','my_form')|replace('_preset','')) }}" id="pageTitle" class="navbar-brand">LinearTurboFold Web Server(beta)</a>
+            <div class="nav-right">
+                <a href="{{ url_for('my_form_old') }}">LinearFold</a> &nbsp&nbsp&nbsp
+                <a href="{{ url_for('my_form_LP') }}">LinearPartition</a> &nbsp&nbsp&nbsp
+                <a href="{{ url_for('my_form_LS_v') }}">LinearSampling</a>
+                &nbsp&nbsp&nbsp<a href="{{ url_for('my_form_LTF') }}" class="nav-act">LinearTurboFold</a>
+            </div>
+
+          </div>
+      </div>
+
+      {% if 'cn' in request.endpoint %}
+        <p id='pageLang' hidden>cn</p>
+      {% else %}
+        <p id='pageLang' hidden>en</p>
+      {% endif %}
+
+      {% if 'LD' in request.endpoint %}
+        <p id='pageProj' hidden>design</p>
+      {% elif 'LV' in request.endpoint %}
+        <p id='pageProj' hidden>fold</p>
+      {% else %}
+        <p id='pageProj' hidden>partition</p>
+      {% endif %}
+
+
+      {% block content %}
+          <!-- <div class="container"> -->
+      {% endblock %}
+
+
+    </body>
+</html>
