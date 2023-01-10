@@ -9,9 +9,8 @@ Created Date: Jan 27, 2018
 
 # flake8: noqa
 
-LOCAL_TESTING = True
+LOCAL_TESTING = False
 
-import json
 import os
 import re
 import socket  # import socket module
@@ -21,7 +20,7 @@ import arc_pairing_single_json
 import flask
 import flask_cors
 import requests
-from flask import redirect, request, url_for
+from flask import redirect, request, send_file, url_for
 from werkzeug.utils import secure_filename
 
 app = flask.Flask(__name__, static_url_path="", static_folder="static", template_folder="templates")
@@ -79,14 +78,15 @@ def my_form_old():
     return flask.render_template("interface_linearfold2_old.html")
 
 
+# Linear Sankoff
 @app.route(sankoffURL, methods=("GET", "POST"))
 def my_form_LS():
     if request.method == "POST":
 
         if LOCAL_TESTING:
-            url = "http://10.217.112.122:7001/linear-sankoff"  # remote server
+            url = "http://0.0.0.0:7001/linear-sankoff"  # local server
         else:
-            url = "http://localhost:7001/linear-sankoff"  # local server
+            url = "http://10.217.112.122:7001/linear-sankoff"  # remote server
 
         arguments = {
             "seq": request.form["seqInput"],
@@ -101,9 +101,8 @@ def my_form_LS():
             "verbose": False,
         }
 
-        x = requests.post(url, json=arguments)
-
-        return flask.render_template("showResult_linearsankoff.html", result=x.text)
+        data = requests.post(url, json=arguments).json()
+        return flask.render_template("showResult_linearsankoff.html", data=data)
 
     return flask.render_template("linear_sankoff.html")
 
