@@ -51,28 +51,14 @@
     <table width="80%">
       <tr>
         <td>
-          <div class="res">
-            <p style="color: #3bbee2">
-              Alignment 1:
-              <button onclick="copyOutput('algn1')">Copy to Clipboard</button>
-            </p>
-            <p id="algn1">{{ data["alignment 1"] }}</p>
-            <p style="color: #3bbee2">
-              Alignment 2:
-              <button onclick="copyOutput('algn2')">Copy to Clipboard</button>
-            </p>
-            <p id="algn2">{{ data["alignment 2"] }}</p>
-            <br />
-            <p style="color: #3bbee2">
-              Structure 1:
-              <button onclick="copyOutput('struc1')">Copy to Clipboard</button>
-            </p>
-            <p id="struc1">{{ data["structure 1"] }}</p>
-            <p style="color: #3bbee2">
-              Structure 2:
-              <button onclick="copyOutput('struc2')">Copy to Clipboard</button>
-            </p>
-            <p id="struc2">{{ data["structure 2"] }}</p>
+          <div class="res" style="font-family: monospace; letter-spacing: 1pt">
+            <h2 style="color: #3bbee2">
+              Result:
+              <button onclick="copyOutput('result')">Copy to Clipboard</button>
+            </h2>
+            {% for line in data["alignment_result"] %}
+            <p id="result" style="margin: 0px; padding: 0px">{{line}}</p>
+            {% endfor %}
           </div>
         </td>
         <td>
@@ -108,18 +94,29 @@
       script.src = "/js/interface.js?v=" + versionUpdate;
       document.body.appendChild(script);
 
+      function getOutput(id) {
+        const elements = document.querySelectorAll("#" + id);
+        var text = "";
+        for (var i = 0; i < elements.length; i++) {
+          text += elements[i].innerHTML;
+          // add a new line if it is not the last element
+          if (i != elements.length - 1) text += "\n";
+        }
+        return text;
+      }
+
       function copyOutput(id) {
-        navigator.clipboard.writeText(document.getElementById(id).innerHTML);
+        // navigator.clipboard.writeText(document.getElementById(id).innerHTML);
+        navigator.clipboard.writeText(getOutput(id));
       }
 
       function downloadResult() {
         const result = {
-          "Alignment 1": document.getElementById("algn1").innerHTML,
-          "Alignment 2": document.getElementById("algn2").innerHTML,
-          "Structure 1": document.getElementById("struc1").innerHTML,
-          "Structure 2": document.getElementById("struc2").innerHTML,
-          "Vm Peak": "{{ data['VmPeak'] }}",
-          "Inside Score": "{{ data['inside score'] }}",
+          "Alignment 1": "{{ data['alignment 1'] }}",
+          "Alignment 2": "{{ data['alignment 2'] }}",
+          "Structure 1": "{{ data['structure 1'] }}",
+          "Structure 2": "{{ data['structure 2'] }}",
+          "Alignment Result": getOutput("result"),
           "Sequence 1 Folding Score":
             "{{ data['sequence 1 folding score'] }} kcal/mol",
           "Sequence 2 Folding Score":
