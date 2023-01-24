@@ -12,6 +12,8 @@
       rel="stylesheet"
       href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
     />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://d3js.org/d3.v6.min.js"></script>
   </head>
   <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those     Files -->
   <script type="text/javascript" language="javascript">
@@ -40,7 +42,55 @@
       </div>
     </div>
 
-    <h5>{{ result }}</h5>
+    <br />
+
+    <!-- create a toggle bar to toggle between two divs -->
+    <input type="checkbox" name="PlotSelector" id="toggler" checked />
+    <label for="PlotSelector"> Interactive Plot</label><br /><br />
+
+    <div id="image">
+      <img
+        src="data:image/png;base64, {{ data['plot'] }}"
+        style="
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          width: 75%;
+        "
+      />
+    </div>
+    <div id="figure"></div>
+
+    <br />
+
+    <div>
+      <div class="res" style="font-family: monospace; letter-spacing: 1pt">
+        <h2 style="color: #3bbee2">
+          Result:
+          <button onclick="copyOutput('result')">Copy to Clipboard</button>
+        </h2>
+        {% for line in data["alignment_result"] %}
+        <p id="result" style="margin: 0px; padding: 0px">{{line}}</p>
+        {% endfor %}
+      </div>
+
+      <p>
+        Sequence 1 Folding Score: {{data["sequence 1 folding score"]}} kcal/mol
+      </p>
+      <p>
+        Sequence 2 Folding Score: {{data["sequence 2 folding score"]}} kcal/mol
+      </p>
+      <p>Probability of Alignment Path: {{data["probability"]}}</p>
+      <p>Time: {{data["time"]}} seconds</p>
+
+      <br />
+      <button
+        style="font-size: large; background-color: #3bbee2; color: white"
+        onclick="downloadResult()"
+      >
+        Download Results
+      </button>
+    </div>
 
     <script src="/js/jquery.min.js"></script>
 
@@ -51,6 +101,18 @@
       script.type = "text/javascript";
       script.src = "/js/interface.js?v=" + versionUpdate;
       document.body.appendChild(script);
+    </script>
+    <script src="js/linear_sankoff.js"></script>
+
+    <script type="text/javascript">
+      generateInteractivePlot(
+        "{{ data['alignment 1'] }}",
+        {{ data['pairs1'] }},
+        "{{ data['alignment 2'] }}",
+        {{ data['pairs2'] }},
+        );
+
+        setPlotsView();
     </script>
   </body>
 </html>

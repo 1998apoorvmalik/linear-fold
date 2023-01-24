@@ -1,0 +1,12 @@
+/* Create a tooltip */
+
+.tooltip {
+  position: absolute;
+  display: block;
+  font-size: 18px;
+  padding: 5px 7px;
+  background-color: burlywood;
+  margin: 2em auto;
+  text-align: center;
+  border-radius: 5px;
+}
