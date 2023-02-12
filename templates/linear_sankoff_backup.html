@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>LinearFold Web Server (beta)</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+    />
+  </head>
+  <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those     Files -->
+  <script type="text/javascript" language="javascript">
+    var versionUpdate = new Date().getTime();
+    var csslink = document.createElement("link");
+    csslink.rel = "stylesheet";
+    csslink.type = "text/css";
+    csslink.href = "/css/interface.css?v=" + versionUpdate;
+    document.head.appendChild(csslink);
+  </script>
+
+  <body>
+    <div id="pageTitle">
+      LinearSankoff Web Server (beta)
+      <div class="nav-right">
+        <a href="{{ url_for('my_form_old') }}">LinearFold</a> &nbsp&nbsp&nbsp
+        <a href="{{ url_for('my_form_LP') }}">LinearPartition</a>
+        &nbsp&nbsp&nbsp
+        <a href="{{ url_for('my_form_LS_v') }}">LinearSampling</a>
+        &nbsp&nbsp&nbsp<a href="{{ url_for('my_form_LTF') }}"
+          >LinearTurboFold</a
+        >
+        &nbsp&nbsp&nbsp<a href="{{ url_for('my_form_LS') }}" class="nav-act"
+          >LinearSankoff</a
+        >
+      </div>
+    </div>
+
+    <br /><br />
+
+    <fieldset class="bigfield">
+      <legend>Interactive demo</legend>
+      <form method="POST" class="userSeq" enctype="multipart/form-data">
+        <fieldset>
+          <legend><i>Add a sequence</i></legend>
+          <b>Paste</b> or <b>type</b> your sequence here (length &lt; 100,000):
+          <br />
+          <!--<textarea name="seqInput" id="seqInput" rows="10" cols="120" placeholder=">name &#x0a;GGUUAAGCGACUAAGCGUACACGGUGGAUGCCCUGGCAGUCAGAGGCGAUGAAGG" ></textarea>-->
+          <textarea name="seqInput" id="seqInput" rows="10" cols="80">
+>B00650 118
+GCCUGGUGGCUAUGGCGAGGAGGCCUAACCCGAUCCCAUCCCGAACUCGGCCGUUAAACUCCUCAGUGCCGAUGGUACUAUGUCUUAAGACCUGGGAGAGUAGGUCGUCGCCAGGCCU
+>B01704 115
+CCUGGCGGCGAUAGUGCGGUGGACCCACCUGAGACCAUACCGAACUCAGAAGUGAAACGCUGUAAUGCCGAUGGUAGUGUGGGGUUUCCCCAUGUGAGAGUAGGGCACCGCCGGG
+  </textarea
+          >
+        </fieldset>
+        <br />
+
+        <fieldset>
+          <legend><i>Arguments</i></legend>
+          <b>λ</b> (weight on alignment, 0.0 - 1.0):&nbsp&nbsp&nbsp&nbsp&nbsp
+          <input
+            type="text"
+            name="w"
+            id="w"
+            placeholder="0.3"
+            value="0.3"
+            maxlength="5"
+            size="10"
+          /><br />
+
+          <b>Beam Size</b> (LinearSankoff, 1 - 100):&nbsp&nbsp&nbsp&nbsp&nbsp
+          <input
+            type="text"
+            name="b"
+            id="beamSize-b"
+            placeholder="100"
+            value="100"
+            maxlength="3"
+            size="10"
+          /><br />
+
+          <b>Beam Size</b> (LinearFold, 1 - 100):&nbsp&nbsp&nbsp&nbsp&nbsp
+          <input
+            type="text"
+            name="LFb"
+            id="beamSize-LFb"
+            placeholder="100"
+            value="100"
+            maxlength="3"
+            size="10"
+          /><br />
+
+          <b>Maximum Energy Difference from Single-Sequence MFE</b> (0 -
+          1):&nbsp&nbsp&nbsp&nbsp&nbsp
+          <input
+            type="text"
+            name="energyDiff"
+            id="energyDiff"
+            placeholder="0.3"
+            value="0.3"
+            maxlength="5"
+            size="10"
+          /><br />
+
+          <b>Beam Size</b> (LinearAlignment, 1 - 100):&nbsp&nbsp&nbsp&nbsp&nbsp
+          <input
+            type="text"
+            name="LAb"
+            id="beamSize-LAb"
+            placeholder="100"
+            value="100"
+            maxlength="3"
+            size="10"
+          /><br />
+
+          <b>Alignment Band Width</b> (0-100, 0 uses posterior probabilistic
+          alignment region):&nbsp&nbsp&nbsp&nbsp&nbsp
+          <input
+            type="text"
+            name="LAw"
+            id="bandwidth"
+            placeholder="0"
+            value="0"
+            maxlength="3"
+            size="10"
+          /><br />
+
+          <input
+            type="checkbox"
+            id="astar"
+            name="astar"
+            value="astar"
+            checked
+          />
+          <label for="cfbox"><b>Use A*</b></label
+          ><br />
+
+          <input type="checkbox" id="branch" name="branch" value="branch" />
+          <label for="cfbox"><b>Domain Insertion</b></label
+          ><br />
+        </fieldset>
+        <br />
+
+        <input
+          type="submit"
+          value="Run LinearSankoff >>"
+          onclick="loading()"
+        />&nbsp &nbsp &nbsp
+        <input type="reset" value="Reset" />
+      </form>
+      <div id="loadingIMG" style="display: none">
+        <img
+          src="https://raw.githubusercontent.com/KaiboLiu/PairingWebDemo/master/img/loading1.gif"
+          alt="Loading..."
+          height="160"
+        />
+      </div>
+    </fieldset>
+    <br /><br />
+
+    <script src="/js/jquery.min.js"></script>
+
+    <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those Files -->
+    <script type="text/javascript" language="javascript">
+      var versionUpdate = new Date().getTime();
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "/js/interface.js?v=" + versionUpdate;
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>

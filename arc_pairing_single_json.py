@@ -190,7 +190,7 @@ def agree(pres, pref, a, b): ## pres[a] = b
 
 def showRrefFamlies(ref):
     stacks, ref_pair = [], []
-    for _ in xrange(len(lbs)):
+    for _ in range(len(lbs)):
         stacks.append([])
         ref_pair.append([])
     for i, item in enumerate(ref):
@@ -215,7 +215,7 @@ def stru2pair(res):
 
     #pairing in result
     stacks = []
-    for _ in xrange(len(lbs)):
+    for _ in range(len(lbs)):
         stacks.append([])
     for i, item in enumerate(res):
         if item in lbs:
@@ -241,7 +241,7 @@ def pairing1(res,score,consPair_set=None):
 
     #pairing in result
     stacks = []
-    for _ in xrange(len(lbs)):
+    for _ in range(len(lbs)):
         stacks.append([])
     for i, item in enumerate(res):
         if item in lbs:
@@ -274,7 +274,7 @@ def pairingCons(res):
 
     #pairing in result
     stacks = []
-    for _ in xrange(len(lbs)):
+    for _ in range(len(lbs)):
         stacks.append([])
     for i, item in enumerate(res):
         if item in lbs:
@@ -303,7 +303,7 @@ def pairing(res,ref,score1,score2,consPair_set=None):
 
     #pairing in result
     stacks = []
-    for _ in xrange(len(lbs)):
+    for _ in range(len(lbs)):
         stacks.append([])
     for i, item in enumerate(res):
         if item in lbs:
@@ -319,7 +319,7 @@ def pairing(res,ref,score1,score2,consPair_set=None):
 
     #pairing in ref
     stacks = []
-    for _ in xrange(len(lbs)):
+    for _ in range(len(lbs)):
         stacks.append([])
     for i, item in enumerate(ref):
         if item in lbs:

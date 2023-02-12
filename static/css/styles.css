@@ -1,0 +1,53 @@
+/* Create a tooltip */
+
+body {
+  background-color: #eff0f2;
+  /*
+ *     max-width: 60%;
+ *         max-width: 60rem;
+ *             width: 1200px;
+ *                 */
+  max-width: 80%;
+  margin: auto;
+}
+
+.tooltip_custom {
+  position: absolute;
+  display: block;
+  font-size: 18px;
+  padding: 5px 7px;
+  background-color: burlywood;
+  margin: 2em auto;
+  text-align: center;
+  border-radius: 5px;
+
+  /* fixed width font */
+  font-family: monospace;
+}
+
+.card {
+  background-color: #eff0f2;
+  padding: 16px;
+}
+
+.hr {
+  padding-top: 0px;
+  margin-top: 0px;
+}
+
+.disabled {
+  display: none;
+}
+
+.legend-box {
+  background-color: orange;
+  float: left;
+  height: 20px;
+  width: 20px;
+  clear: both;
+}
+
+#mapdiv {
+  top: 10px;
+  width: 0px;
+}

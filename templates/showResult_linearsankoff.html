@@ -1,138 +1,125 @@
 <!DOCTYPE html>
 
-<html>
-  <head>
-    <title>LinearFold Web Server (beta)</title>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <link
-      rel="stylesheet"
-      href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-    />
-  </head>
-  <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those     Files -->
-  <script type="text/javascript" language="javascript">
-    var versionUpdate = new Date().getTime();
-    var csslink = document.createElement("link");
-    csslink.rel = "stylesheet";
-    csslink.type = "text/css";
-    csslink.href = "/css/interface.css?v=" + versionUpdate;
-    document.head.appendChild(csslink);
-  </script>
+{% extends "header.html" %} {% block content %}
 
-  <body>
-    <div id="pageTitle">
-      LinearSankoff Web Server (beta)
-      <div class="nav-right">
-        <a href="{{ url_for('my_form_old') }}">LinearFold</a> &nbsp&nbsp&nbsp
-        <a href="{{ url_for('my_form_LP') }}">LinearPartition</a>
-        &nbsp&nbsp&nbsp
-        <a href="{{ url_for('my_form_LS_v') }}">LinearSampling</a>
-        &nbsp&nbsp&nbsp<a href="{{ url_for('my_form_LTF') }}"
-          >LinearTurboFold</a
-        >
-        &nbsp&nbsp&nbsp<a href="{{ url_for('my_form_LS') }}" class="nav-act"
-          >LinearSankoff</a
-        >
-      </div>
-    </div>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="css/styles.css" />
+<script src="https://d3js.org/d3.v6.min.js"></script>
 
-    <br />
-    <img
-      src="data:image/png;base64, {{ data['plot'] }}"
-      style="display: block; margin-left: auto; margin-right: auto; width: 75%"
-    />
+<!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those     Files -->
+<script type="text/javascript" language="javascript">
+  var versionUpdate = new Date().getTime();
+  var csslink = document.createElement("link");
+  csslink.rel = "stylesheet";
+  csslink.type = "text/css";
+  csslink.href = "/css/interface.css?v=" + versionUpdate;
+  document.head.appendChild(csslink);
+</script>
 
-    <br />
+<br />
 
-    <table width="80%">
-      <tr>
-        <td>
-          <div class="res" style="font-family: monospace; letter-spacing: 1pt">
-            <h2 style="color: #3bbee2">
-              Result:
-              <button onclick="copyOutput('result')">Copy to Clipboard</button>
-            </h2>
-            {% for line in data["alignment_result"] %}
-            <p id="result" style="margin: 0px; padding: 0px">{{line}}</p>
-            {% endfor %}
-          </div>
-        </td>
-        <td>
-          <p>
-            Sequence 1 Folding Score: {{data["sequence 1 folding score"]}}
-            kcal/mol
-          </p>
-          <p>
-            Sequence 2 Folding Score: {{data["sequence 2 folding score"]}}
-            kcal/mol
-          </p>
-          <p>Probability of Alignment Path: {{data["probability"]}}</p>
-          <p>Time: {{data["time"]}} seconds</p>
-        </td>
-      </tr>
-    </table>
+<div id="result-page"></div>
 
-    <br />
-    <button
-      style="font-size: large; background-color: #3bbee2; color: white"
-      onclick="downloadResult()"
-    >
-      Download Results
-    </button>
+<!-- create a toggle bar to toggle between two divs -->
 
-    <script src="/js/jquery.min.js"></script>
+<!-- <input type="checkbox" name="PlotSelector" id="toggler" checked /> -->
+<!-- <label for="PlotSelector"> Interactive Plot</label><br /><br /> -->
+<h3>Figure</h3>
+<div class="form-check form-switch">
+  <input class="form-check-input" type="checkbox" role="switch" id="toggler" name="PlotSelector" checked />
+  <label class="form-check-label" for="flexSwitchCheckDefault">Interactive</label>
+</div>
 
-    <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those Files -->
-    <script type="text/javascript" language="javascript">
-      var versionUpdate = new Date().getTime();
-      var script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = "/js/interface.js?v=" + versionUpdate;
-      document.body.appendChild(script);
+<div id="image">
+  <img src="data:image/png;base64, {{ data['plot'] }}" style="display: block; margin-left: auto; margin-right: auto; width: 75%" />
+</div>
+<div id="figure">
+  <button type="button" class="btn btn-dark btn-sm" onclick="zoomIn()">Zoom in</button>
+  <button type="button" class="btn btn-dark btn-sm" onclick="zoomOut()">Zoom out</button>
+  <button type="button" class="btn btn-dark btn-sm" onclick="resetZoom()">Reset zoom</button>
+  <button type="button" class="btn btn-dark btn-sm" onclick="panLeft()">Pan left</button>
+  <button type="button" class="btn btn-dark btn-sm" onclick="panRight()">Pan right</button>
+  <button type="button" class="btn btn-dark btn-sm" onclick="center()">Center</button>
+  <div class="mt-2">
+    <div class="legend-box" style="background-color: teal"></div>
+    &nbsp; Pairing
+  </div>
+  <div>
+    <div class="legend-box" style="display: inline-block"></div>
+    &nbsp; Inserted Branch
+  </div>
+  <svg width="100%">
+    <g></g>
+  </svg>
+</div>
 
-      function getOutput(id) {
-        const elements = document.querySelectorAll("#" + id);
-        var text = "";
-        for (var i = 0; i < elements.length; i++) {
-          text += elements[i].innerHTML;
-          // add a new line if it is not the last element
-          if (i != elements.length - 1) text += "\n";
-        }
-        return text;
-      }
+<br />
 
-      function copyOutput(id) {
-        // navigator.clipboard.writeText(document.getElementById(id).innerHTML);
-        navigator.clipboard.writeText(getOutput(id));
-      }
-
-      function downloadResult() {
-        const result = {
-          "Alignment 1": "{{ data['alignment 1'] }}",
-          "Alignment 2": "{{ data['alignment 2'] }}",
-          "Structure 1": "{{ data['structure 1'] }}",
-          "Structure 2": "{{ data['structure 2'] }}",
-          "Alignment Result": getOutput("result"),
-          "Sequence 1 Folding Score":
-            "{{ data['sequence 1 folding score'] }} kcal/mol",
-          "Sequence 2 Folding Score":
-            "{{ data['sequence 2 folding score'] }} kcal/mol",
-          "Probability of Alignment Path": "{{ data['probability'] }}",
-          Time: "{{ data['time'] }} seconds",
-        };
-
-        const data = JSON.stringify(result, null, 2);
-        const blob = new Blob([data], { type: "text/plain" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.download = "result.txt";
-        a.href = url;
-        a.click();
-      }
+<div>
+  <h3>Result</h3>
+  <div class="res" style="font-family: monospace; letter-spacing: 1pt">
+    <p id="alignment-result" style="margin: 0px; padding: 0px; white-space: pre; overflow: scroll"></p>
+    <button type="button" onclick="copyOutput('alignment-result')" class="btn btn-secondary btn-sm mt-2">Copy to Clipboard</button>
+    <script>
+      const alignmenResult = {{ data["alignment_result"] | tojson }};
+      alignmenResult[2] = alignmenResult[2].replace(/\s/g, "&nbsp;");
+      document.getElementById("alignment-result").innerHTML = alignmenResult.join("<br>");
     </script>
-  </body>
-</html>
+  </div>
+
+  <br />
+  <p>Sequence 1 Free Energy: {{ data["sequence 1 folding score"] }} kcal/mol</p>
+  <p>Sequence 2 Free Energy: {{ data["sequence 2 folding score"] }} kcal/mol</p>
+  <p>Log Probability of Alignment Path: {{ data["probability"] }}</p>
+  <p>Time: {{ data["time"] }} seconds</p>
+  <button type="button" class="btn btn-primary" onclick="downloadResult()">Download Results</button>
+</div>
+
+<br />
+
+<script src="/js/jquery.min.js"></script>
+
+<script type="text/javascript" language="javascript">
+  var versionUpdate = new Date().getTime();
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src = "/js/interface.js?v=" + versionUpdate;
+  document.body.appendChild(script);
+</script>
+<script src="js/linear_sankoff.js?v=101"></script>
+<script type="text/javascript">
+  generateInteractivePlot(
+    "{{ data['alignment 1'] }}",
+    {{ data['pairs1'] }},
+    "{{ data['alignment 2'] }}",
+    {{ data['pairs2'] }},
+    {{ data["alignment_result"][2] | tojson }}
+    );
+    setPlotsView();
+    highlightPairs({{ data['inserted_base_pairs_seq1'] }}, true);
+    highlightPairs({{ data['inserted_base_pairs_seq2'] }}, false);
+
+    function downloadResult() {
+      const result = {
+        "Alignment 1": "{{ data['alignment 1'] }}",
+        "Alignment 2": "{{ data['alignment 2'] }}",
+        "Structure 1": "{{ data['structure 1'] }}",
+        "Structure 2": "{{ data['structure 2'] }}",
+        "Alignment Result": getOutput("result"),
+        "Sequence 1 Folding Score": "{{ data['sequence 1 folding score'] }} kcal/mol",
+        "Sequence 2 Folding Score": "{{ data['sequence 2 folding score'] }} kcal/mol",
+        "Probability of Alignment Path": "{{ data['probability'] }}",
+        Time: "{{ data['time'] }} seconds",
+      };
+
+      const res = JSON.stringify(result, null, 2);
+      const blob = new Blob([res], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.download = "result.txt";
+      a.href = url;
+      a.click();
+    }
+</script>
+
+{% endblock %}

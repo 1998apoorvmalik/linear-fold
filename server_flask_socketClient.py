@@ -9,7 +9,7 @@ Created Date: Jan 27, 2018
 
 # flake8: noqa
 
-LOCAL_TESTING = False
+LOCAL_TESTING = True
 
 import os
 import re
@@ -75,7 +75,15 @@ def my_form_LS_v():
 
 @app.route(demoURL)
 def my_form_old():
-    return flask.render_template("interface_linearfold2_old.html")
+    if LOCAL_TESTING:
+        return flask.render_template("interface_linearfold2_old.html")
+
+    return redirect("https://46cf-128-193-8-41.ngrok.io", code=302)
+
+# delete later
+@app.route("/test")
+def test():
+    return flask.render_template("header.html")
 
 
 # Linear Sankoff
@@ -88,6 +96,8 @@ def my_form_LS():
         else:
             url = "http://10.217.112.122:7001/linear-sankoff"  # remote server
 
+        url = "http://10.217.112.122:7001/linear-sankoff"  # remote server
+
         arguments = {
             "seq": request.form["seqInput"],
             "w": float(request.form["w"]),
@@ -95,13 +105,14 @@ def my_form_LS():
             "LFb": int(request.form["LFb"]),
             "LAb": int(request.form["LAb"]),
             "LAw": int(request.form["LAw"]),
-            "astar": False,
+            "astar": "astar" in request.form,
             "branch": "branch" in request.form,
             "energyDiff": float(request.form["energyDiff"]),
             "verbose": False,
         }
 
         data = requests.post(url, json=arguments).json()
+        data['time'] = str(round(float(data['time']), 2))
         return flask.render_template("showResult_linearsankoff.html", data=data)
 
     return flask.render_template("linear_sankoff.html")
@@ -209,14 +220,15 @@ def inputSeq_LV():
             f.write("{}\n{}\n{}".format(seqName, seq, beamsize))
             f.close()
             T0 = time.time()
-            try:
+            # try:
+            if True:
                 # print(filename)
                 newurl = LF_v_core(filename, seq, seqName, beamsize, T0, usrIP)
                 # print(newurl)
                 # show(newurl)
                 return flask.redirect(newurl)
-            except:
-                return "Sorry, Something wrong dealing with the sequence (LinearFold-V)"
+            # except:
+            #     return "Sorry, Something wrong dealing with the sequence (LinearFold-V)"
 
 
 def LF_v_core(filename, seq, seqName, beamsize, T0, usrIP, conSeq=None, dld_cmt=": "):
@@ -706,7 +718,7 @@ def inputSeq():
                     return flask.redirect(newurl)
                 except:
                     return "Sorry, Something wrong dealing with the sequence during LinearFold-V only mode"
-            try:
+            if True:
                 # if True:
                 t1, t2 = request_ironcreek(
                     filename
@@ -784,8 +796,9 @@ def inputSeq():
                 # print(newurl)
                 # show(newurl)
                 return flask.redirect(newurl)
-            except:
-                return "Sorry, Something wrong dealing with the sequence (LinearFold)"
+            # except:
+            #     print('Error')
+            #     return "Sorry, Something wrong dealing with the sequence (LinearFold)"
 
             """
             #show(pairingFile)
@@ -854,9 +867,10 @@ def inputSeq_LS_v():
             f.close()
 
             # beamsize = 100
-            try:
-                # if True:
+            # try:
+            if True:
                 newurl = LS_v_core(filename, seq, seqName, beamsize, samplesize, T0, usrIP)
+                print(newurl)
                 if newurl == "wrong":
                     # return "Sorry, Something wrong dealing with the sequence with linearSampling.\nPlease try aga"
                     flask.flash(
@@ -865,9 +879,10 @@ def inputSeq_LS_v():
                     return flask.render_template("interface_linearsampling_v.html")
                 return flask.redirect(newurl)
 
-            except:
-                flask.flash("Sorry, Something wrong dealing with the sequence with linearSampling.\nPlease try again")
-                return flask.render_template("interface_linearsampling_v.html")
+            # except:
+            #     print('Error')
+            #     flask.flash("Sorry, Something wrong dealing with the sequence with linearSampling.\nPlease try again")
+            #     return flask.render_template("interface_linearsampling_v.html")
 
 
 def LS_v_core(filename, seq, seqName, beamsize, samplesize, T0, usrIP):
@@ -883,7 +898,7 @@ def LS_v_core(filename, seq, seqName, beamsize, samplesize, T0, usrIP):
     # write results of lsv to a final sampling.res result (json)
     pairingFile = pairingDir + filename + ".sampling.res"  # output with pairingName
     arc_pairing_single_json.LoadSave_ls(
-        pairingFile, seq, outLSv, t, beamsize, seqName, samplesize, nDisp=min(18, samplesize)
+        pairingFile, seq, outLSv, t, beamsize, seqName, samplesize, nDisp=min(18, int(samplesize))
     )
 
     T2 = time.time() - T0
@@ -935,9 +950,9 @@ def request_ironcreek(seqfile):
 
     s1.connect((host, port1))
     s2.connect((host, port2))
-    # seqfile_s = bytes(seqfile,'UTF-8')
-    s1.send(seqfile)
-    s2.send(seqfile)
+    seqfile_s = bytes(seqfile,'UTF-8')
+    s1.send(seqfile_s)
+    s2.send(seqfile_s)
     t1 = s1.recv(1024)
     t2 = s2.recv(1024)
 
@@ -970,9 +985,9 @@ def request_ironcreek_lp(seqfile):
     s3.connect((host, port3))
     s4.connect((host, port4))
 
-    # seqfile_s = bytes(seqfile,'UTF-8')
-    s3.send(seqfile)
-    s4.send(seqfile)
+    seqfile_s = bytes(seqfile,'UTF-8')
+    s3.send(seqfile_s)
+    s4.send(seqfile_s)
     rec3 = s3.recv(1024)
     rec4 = s4.recv(1024)
 
@@ -990,8 +1005,8 @@ def request_ironcreek_lp_v(seqfile):
     port4 = 21111  # set port
 
     s4.connect((host, port4))
-    # seqfile_s = bytes(seqfile,'UTF-8')
-    s4.send(seqfile)
+    seqfile_s = bytes(seqfile,'UTF-8')
+    s4.send(seqfile_s)
     rec = s4.recv(1024)
 
     s4.close()
@@ -1006,8 +1021,8 @@ def request_ironcreek_ls_v(seqfile):
     port4 = 31111  # set port
 
     s4.connect((host, port4))
-    # seqfile_s = bytes(seqfile,'UTF-8')
-    s4.send(seqfile)
+    seqfile_s = bytes(seqfile,'UTF-8')
+    s4.send(seqfile_s)
     rec = s4.recv(1024)
 
     s4.close()
@@ -1239,7 +1254,7 @@ def inputSeq_LTF():  # purpose- create an output file to do what?
     with open(ltfBaseName + ".para", "w") as f:
         f.write("{}\n{}\n{}\n{}\n".format(foldingBeam, alignmentBeam, iteration, Threshknot))
 
-    outDirLTF1 = request_ironcreek_LTF(ltfBaseName)  # call this line 173
+    outDirLTF1 = str(request_ironcreek_LTF(ltfBaseName), 'UTF-8')  # call this line 173
     assert outDirLTF1 == ironcreekOutDir_LTF + jobID, "output to {}, not {}".format(
         outDirLTF1, ironcreekOutDir_LTF + jobID
     )
@@ -1262,7 +1277,7 @@ def request_ironcreek_LTF(seqfile):
     host = "ironcreek.eecs.oregonstate.edu"
     port2 = 11118
     s2.connect((host, port2))
-    s2.send(seqfile)
+    s2.send(bytes(seqfile,'UTF-8'))
     outDirLTF1 = s2.recv(1024)
     s2.close()
     return outDirLTF1
@@ -1294,6 +1309,7 @@ if __name__ == "__main__":
     # app.run(host='128.193.40.12', port=22) #, debug=True)  # web.engr.oregonstate.edu
     # app.debug = True
 
+    app.config["TEMPLATES_AUTO_RELOAD"] = True
     if LOCAL_TESTING:
         app.run(port=8080)  # local machine
     else:

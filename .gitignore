@@ -5,9 +5,12 @@ __pycache__
 error.log
 usrLog.txt
 
+venv
+
 
 LTFDir
 pairingRes
 
+.vscode
 
-
+.prettierrc

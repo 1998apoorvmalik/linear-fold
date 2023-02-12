@@ -1,167 +1,106 @@
 <!DOCTYPE html>
 
-<html>
-  <head>
-    <title>LinearFold Web Server (beta)</title>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <link
-      rel="stylesheet"
-      href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-    />
-  </head>
-  <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those     Files -->
-  <script type="text/javascript" language="javascript">
-    var versionUpdate = new Date().getTime();
-    var csslink = document.createElement("link");
-    csslink.rel = "stylesheet";
-    csslink.type = "text/css";
-    csslink.href = "/css/interface.css?v=" + versionUpdate;
-    document.head.appendChild(csslink);
-  </script>
+{% extends "header.html" %} {% block content %}
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
 
-  <body>
-    <div id="pageTitle">
-      LinearSankoff Web Server (beta)
-      <div class="nav-right">
-        <a href="{{ url_for('my_form_old') }}">LinearFold</a> &nbsp&nbsp&nbsp
-        <a href="{{ url_for('my_form_LP') }}">LinearPartition</a>
-        &nbsp&nbsp&nbsp
-        <a href="{{ url_for('my_form_LS_v') }}">LinearSampling</a>
-        &nbsp&nbsp&nbsp<a href="{{ url_for('my_form_LTF') }}"
-          >LinearTurboFold</a
-        >
-        &nbsp&nbsp&nbsp<a href="{{ url_for('my_form_LS') }}" class="nav-act"
-          >LinearSankoff</a
-        >
-      </div>
-    </div>
-
-    <br /><br />
-
-    <fieldset class="bigfield">
-      <legend>Interactive demo</legend>
-      <form method="POST" class="userSeq" enctype="multipart/form-data">
-        <fieldset>
-          <legend><i>Add a sequence</i></legend>
-          <b>Paste</b> or <b>type</b> your sequence here (length &lt; 100,000):
-          <br />
-          <!--<textarea name="seqInput" id="seqInput" rows="10" cols="120" placeholder=">name &#x0a;GGUUAAGCGACUAAGCGUACACGGUGGAUGCCCUGGCAGUCAGAGGCGAUGAAGG" ></textarea>-->
-          <textarea name="seqInput" id="seqInput" rows="10" cols="80">
->tdbD00000050
-GGGGGCAUAGCUCAGCUGGGAGAGCACCUGCUUUGCAAGCAGGAGGUCAUCGGUUCGAUCCCGUUUGCCUCCA
->tdbD00004265
-GGCGGCAUAGCCAAGUGGUAAGGCAGAGGUCUGCAAAACCUUUAUUCCCCGGUUCGAAUCCGGGUGCCGCCU
-  </textarea
+<fieldset>
+  <div class="card">
+    <legend>
+      <h3 class="card-title">Interactive demo</h3>
+    </legend>
+    <!-- add a divider -->
+    <hr class="hr" />
+    <form method="POST" class="userSeq" enctype="multipart/form-data">
+      <fieldset>
+        <legend>Add a pair of sequences</legend>
+        <b>Paste</b> or <b>type</b> your pair of sequences here (length &lt; 100,000):
+        <br />
+        <div class="form-group">
+          <textarea class="form-control" name="seqInput" id="seqInput" rows="5" cols="80">
+>B00650 118
+GCCUGGUGGCUAUGGCGAGGAGGCCUAACCCGAUCCCAUCCCGAACUCGGCCGUUAAACUCCUCAGUGCCGAUGGUACUAUGUCUUAAGACCUGGGAGAGUAGGUCGUCGCCAGGCCU
+>B01704 115
+CCUGGCGGCGAUAGUGCGGUGGACCCACCUGAGACCAUACCGAACUCAGAAGUGAAACGCUGUAAUGCCGAUGGUAGUGUGGGGUUUCCCCAUGUGAGAGUAGGGCACCGCCGGG
+            </textarea
           >
-        </fieldset>
-        <br />
-
-        <fieldset>
-          <legend><i>Arguments</i></legend>
-          <b>λ</b> (weight on alignment, 0.0 - 1.0):&nbsp&nbsp&nbsp&nbsp&nbsp
-          <input
-            type="text"
-            name="w"
-            id="w"
-            placeholder="0.3"
-            value="0.3"
-            maxlength="5"
-            size="10"
-          /><br />
-
-          <b>Beam Size</b> (LinearSankoff, 1 - 100):&nbsp&nbsp&nbsp&nbsp&nbsp
-          <input
-            type="text"
-            name="b"
-            id="beamSize-b"
-            placeholder="100"
-            value="100"
-            maxlength="3"
-            size="10"
-          /><br />
-
-          <b>Beam Size</b> (LinearFold, 1 - 100):&nbsp&nbsp&nbsp&nbsp&nbsp
-          <input
-            type="text"
-            name="LFb"
-            id="beamSize-LFb"
-            placeholder="100"
-            value="100"
-            maxlength="3"
-            size="10"
-          /><br />
-
-          <b>Maximum Energy Difference from MFE</b> (0 -
-          1):&nbsp&nbsp&nbsp&nbsp&nbsp
-          <input
-            type="text"
-            name="energyDiff"
-            id="energyDiff"
-            placeholder="0.3"
-            value="0.3"
-            maxlength="5"
-            size="10"
-          /><br />
-
-          <b>Beam Size</b> (LinearAlignment, 1 - 100):&nbsp&nbsp&nbsp&nbsp&nbsp
-          <input
-            type="text"
-            name="LAb"
-            id="beamSize-LAb"
-            placeholder="100"
-            value="100"
-            maxlength="3"
-            size="10"
-          /><br />
-
-          <b>Alignment Band Width</b> (0-100, 0 uses posterior probabilistic
-          alignment region):&nbsp&nbsp&nbsp&nbsp&nbsp
-          <input
-            type="text"
-            name="LAw"
-            id="bandwidth"
-            placeholder="0"
-            value="0"
-            maxlength="3"
-            size="10"
-          /><br />
-
-          <input type="checkbox" id="branch" name="branch" value="branch" />
-          <label for="cfbox"><b>Domain Insertion</b></label
-          ><br />
-        </fieldset>
-        <br />
-
-        <input
-          type="submit"
-          value="Run LinearSankoff >>"
-          onclick="loading()"
-        />&nbsp &nbsp &nbsp
-        <input type="reset" value="Reset" />
-      </form>
-      <div id="loadingIMG" style="display: none">
-        <img
-          src="https://raw.githubusercontent.com/KaiboLiu/PairingWebDemo/master/img/loading1.gif"
-          alt="Loading..."
-          height="160"
-        />
+        </div>
+      </fieldset>
+      <div class="dropdown mt-1">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Samples</button>
+        <ul class="dropdown-menu">
+          <li>
+            <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(0)">Sample1 (Domain Insertion Demo)</button>
+          </li>
+          <li>
+            <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(1)">Sample2 (Domain Insertion Demo)</button>
+          </li>
+          <li>
+            <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(2)">Sample3</button>
+          </li>
+          <li>
+            <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(3)">Sample4</button>
+          </li>
+          <li>
+            <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(4)">Sample5</button>
+          </li>
+        </ul>
       </div>
-    </fieldset>
-    <br /><br />
 
-    <script src="/js/jquery.min.js"></script>
+      <br />
 
-    <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those Files -->
-    <script type="text/javascript" language="javascript">
-      var versionUpdate = new Date().getTime();
-      var script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = "/js/interface.js?v=" + versionUpdate;
-      document.body.appendChild(script);
-    </script>
-  </body>
-</html>
+      <fieldset>
+        <legend>Arguments</legend>
+        <div class="form-group">
+          <label for="w"><b>λ</b> (weight on alignment: 0.0 - 1.0)</label>
+          <input class="form-control w-25" type="text" name="w" id="w" placeholder="0.3" value="0.3" maxlength="5" size="10" />
+        </div>
+
+        <div class="form-group mt-2">
+          <label for="beamSize-b"><b>Beam Size</b> (LinearSankoff: 1 - 100)</label>
+          <input class="form-control w-25" type="text" name="b" id="beamSize-b" placeholder="100" value="100" maxlength="3" size="10" />
+        </div>
+
+        <div class="form-group mt-2">
+          <label for="beamSize-LFb"><b>Beam Size</b> (LinearFold: 1 - 100)</label>
+          <input class="form-control w-25" type="text" name="LFb" id="beamSize-LFb" placeholder="100" value="100" maxlength="3" size="1" />
+        </div>
+        <div class="form-group mt-2">
+          <label for="energyDiff"> <b>Maximum Energy Difference from Single-Sequence MFE</b> (0 - 1)</label>
+          <input class="form-control w-25" type="text" name="energyDiff" id="energyDiff" placeholder="0.3" value="0.3" maxlength="5" size="10" />
+        </div>
+
+        <div class="form-group mt-2">
+          <label for="beamSize-LAb"><b>Beam Size</b> (LinearAlignment: 1 - 100)</label>
+          <input class="form-control w-25" type="text" name="LAb" id="beamSize-LAb" placeholder="100" value="100" maxlength="3" size="10" />
+        </div>
+
+        <div class="form-group mt-2 mb-2">
+          <label for="bandwidth"> <b>Alignment Band Width</b> (0-100: 0 uses posterior probabilistic alignment region) </label>
+          <input class="form-control w-25" type="text" name="LAw" id="bandwidth" placeholder="0" value="0" maxlength="3" size="10" />
+        </div>
+
+        <input type="checkbox" id="astar" name="astar" value="astar" checked />
+        <label for="cfbox"><b>Use A*</b></label
+        ><br />
+
+        <input type="checkbox" id="branch" name="branch" value="branch" checked />
+        <label for="cfbox"><b>Domain Insertion</b></label
+        ><br />
+      </fieldset>
+      <br />
+
+      <input type="submit" class="btn btn-primary" value="Run LinearSankoff" onclick="loading()" />
+      <input type="reset" class="btn btn-secondary" value="Reset" />
+    </form>
+  </div>
+</fieldset>
+
+<!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those Files -->
+<script type="text/javascript" language="javascript">
+  var versionUpdate = new Date().getTime();
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src = "/js/interface.js?v=" + versionUpdate;
+  document.body.appendChild(script);
+</script>
+{% endblock %}
