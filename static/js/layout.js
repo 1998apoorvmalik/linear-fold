@@ -10,11 +10,7 @@ const LS_SAMPLES = [
   ">B00650 118\nGCCUGGUGGCUAUGGCGAGGAGGCCUAACCCGAUCCCAUCCCGAACUCGGCCGUUAAACUCCUCAGUGCCGAUGGUACUAUGUCUUAAGACCUGGGAGAGUAGGUCGUCGCCAGGCCU\n>B01704 115\nCCUGGCGGCGAUAGUGCGGUGGACCCACCUGAGACCAUACCGAACUCAGAAGUGAAACGCUGUAAUGCCGAUGGUAGUGUGGGGUUUCCCCAUGUGAGAGUAGGGCACCGCCGGG",
 ];
 
-console.log(pageName);
-if (pageName == "linearsankoff") {
-  // make a attribute for the link active
-  document.getElementById("linear-sankoff").classList.add("active");
-}
+document.getElementById(pageName).classList.add("active");
 
 // check if page containes an id 'result'
 if (document.getElementById("result-page")) {

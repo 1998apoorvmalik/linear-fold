@@ -3,104 +3,86 @@
 {% extends "header.html" %} {% block content %}
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
 
-<fieldset>
-  <div class="card">
-    <legend>
-      <h3 class="card-title">Interactive demo</h3>
-    </legend>
-    <!-- add a divider -->
-    <hr class="hr" />
-    <form method="POST" class="userSeq" enctype="multipart/form-data">
-      <fieldset>
-        <legend>Add a pair of sequences</legend>
-        <b>Paste</b> or <b>type</b> your pair of sequences here (length &lt; 100,000):
-        <br />
-        <div class="form-group">
-          <textarea class="form-control" name="seqInput" id="seqInput" rows="5" cols="80">
+<form method="POST" class="userSeq" enctype="multipart/form-data">
+  <fieldset>
+    <legend>Add a pair of sequences</legend>
+    <b>Paste</b> or <b>type</b> your pair of sequences here (length &lt; 100,000):
+    <br />
+    <div class="form-group">
+      <textarea class="form-control" name="seqInput" id="seqInput" rows="5" cols="80">
 >B00650 118
 GCCUGGUGGCUAUGGCGAGGAGGCCUAACCCGAUCCCAUCCCGAACUCGGCCGUUAAACUCCUCAGUGCCGAUGGUACUAUGUCUUAAGACCUGGGAGAGUAGGUCGUCGCCAGGCCU
 >B01704 115
 CCUGGCGGCGAUAGUGCGGUGGACCCACCUGAGACCAUACCGAACUCAGAAGUGAAACGCUGUAAUGCCGAUGGUAGUGUGGGGUUUCCCCAUGUGAGAGUAGGGCACCGCCGGG
-            </textarea
-          >
-        </div>
-      </fieldset>
-      <div class="dropdown mt-1">
-        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Samples</button>
-        <ul class="dropdown-menu">
-          <li>
-            <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(0)">Sample1 (Domain Insertion Demo)</button>
-          </li>
-          <li>
-            <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(1)">Sample2 (Domain Insertion Demo)</button>
-          </li>
-          <li>
-            <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(2)">Sample3</button>
-          </li>
-          <li>
-            <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(3)">Sample4</button>
-          </li>
-          <li>
-            <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(4)">Sample5</button>
-          </li>
-        </ul>
-      </div>
-
-      <br />
-
-      <fieldset>
-        <legend>Arguments</legend>
-        <div class="form-group">
-          <label for="w"><b>λ</b> (weight on alignment: 0.0 - 1.0)</label>
-          <input class="form-control w-25" type="text" name="w" id="w" placeholder="0.3" value="0.3" maxlength="5" size="10" />
-        </div>
-
-        <div class="form-group mt-2">
-          <label for="beamSize-b"><b>Beam Size</b> (LinearSankoff: 1 - 100)</label>
-          <input class="form-control w-25" type="text" name="b" id="beamSize-b" placeholder="100" value="100" maxlength="3" size="10" />
-        </div>
-
-        <div class="form-group mt-2">
-          <label for="beamSize-LFb"><b>Beam Size</b> (LinearFold: 1 - 100)</label>
-          <input class="form-control w-25" type="text" name="LFb" id="beamSize-LFb" placeholder="100" value="100" maxlength="3" size="1" />
-        </div>
-        <div class="form-group mt-2">
-          <label for="energyDiff"> <b>Maximum Energy Difference from Single-Sequence MFE</b> (0 - 1)</label>
-          <input class="form-control w-25" type="text" name="energyDiff" id="energyDiff" placeholder="0.3" value="0.3" maxlength="5" size="10" />
-        </div>
-
-        <div class="form-group mt-2">
-          <label for="beamSize-LAb"><b>Beam Size</b> (LinearAlignment: 1 - 100)</label>
-          <input class="form-control w-25" type="text" name="LAb" id="beamSize-LAb" placeholder="100" value="100" maxlength="3" size="10" />
-        </div>
-
-        <div class="form-group mt-2 mb-2">
-          <label for="bandwidth"> <b>Alignment Band Width</b> (0-100: 0 uses posterior probabilistic alignment region) </label>
-          <input class="form-control w-25" type="text" name="LAw" id="bandwidth" placeholder="0" value="0" maxlength="3" size="10" />
-        </div>
-
-        <input type="checkbox" id="astar" name="astar" value="astar" checked />
-        <label for="cfbox"><b>Use A*</b></label
-        ><br />
-
-        <input type="checkbox" id="branch" name="branch" value="branch" checked />
-        <label for="cfbox"><b>Domain Insertion</b></label
-        ><br />
-      </fieldset>
-      <br />
-
-      <input type="submit" class="btn btn-primary" value="Run LinearSankoff" onclick="loading()" />
-      <input type="reset" class="btn btn-secondary" value="Reset" />
-    </form>
+      </textarea>
+    </div>
+  </fieldset>
+  <div class="dropdown mt-1">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Samples</button>
+    <ul class="dropdown-menu">
+      <li>
+        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(0)">Sample1 (Domain Insertion Demo)</button>
+      </li>
+      <li>
+        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(1)">Sample2 (Domain Insertion Demo)</button>
+      </li>
+      <li>
+        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(2)">Sample3</button>
+      </li>
+      <li>
+        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(3)">Sample4</button>
+      </li>
+      <li>
+        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(4)">Sample5</button>
+      </li>
+    </ul>
   </div>
-</fieldset>
 
-<!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those Files -->
-<script type="text/javascript" language="javascript">
-  var versionUpdate = new Date().getTime();
-  var script = document.createElement("script");
-  script.type = "text/javascript";
-  script.src = "/js/interface.js?v=" + versionUpdate;
-  document.body.appendChild(script);
-</script>
+  <br />
+
+  <fieldset>
+    <legend>Arguments</legend>
+    <div class="form-group">
+      <label for="w"><b>λ</b> (weight on alignment: 0.0 - 1.0)</label>
+      <input class="form-control w-25" type="text" name="w" id="w" placeholder="0.3" value="0.3" maxlength="5" size="10" />
+    </div>
+
+    <div class="form-group mt-2">
+      <label for="beamSize-b"><b>Beam Size</b> (LinearSankoff: 1 - 100)</label>
+      <input class="form-control w-25" type="text" name="b" id="beamSize-b" placeholder="100" value="100" maxlength="3" size="10" />
+    </div>
+
+    <div class="form-group mt-2">
+      <label for="beamSize-LFb"><b>Beam Size</b> (LinearFold: 1 - 100)</label>
+      <input class="form-control w-25" type="text" name="LFb" id="beamSize-LFb" placeholder="100" value="100" maxlength="3" size="1" />
+    </div>
+    <div class="form-group mt-2">
+      <label for="energyDiff"> <b>Maximum Energy Difference from Single-Sequence MFE</b> (0 - 1)</label>
+      <input class="form-control w-25" type="text" name="energyDiff" id="energyDiff" placeholder="0.3" value="0.3" maxlength="5" size="10" />
+    </div>
+
+    <div class="form-group mt-2">
+      <label for="beamSize-LAb"><b>Beam Size</b> (LinearAlignment: 1 - 100)</label>
+      <input class="form-control w-25" type="text" name="LAb" id="beamSize-LAb" placeholder="100" value="100" maxlength="3" size="10" />
+    </div>
+
+    <div class="form-group mt-2 mb-2">
+      <label for="bandwidth"> <b>Alignment Band Width</b> (0-100: 0 uses posterior probabilistic alignment region) </label>
+      <input class="form-control w-25" type="text" name="LAw" id="bandwidth" placeholder="0" value="0" maxlength="3" size="10" />
+    </div>
+
+    <input type="checkbox" id="astar" name="astar" value="astar" checked />
+    <label for="cfbox"><b>Use A*</b></label
+    ><br />
+
+    <input type="checkbox" id="branch" name="branch" value="branch" checked />
+    <label for="cfbox"><b>Domain Insertion</b></label
+    ><br />
+  </fieldset>
+  <br />
+
+  <input type="submit" class="btn btn-primary" value="Run LinearSankoff" onclick="loading()" />
+  <input type="reset" class="btn btn-secondary" value="Reset" />
+</form>
+
 {% endblock %}

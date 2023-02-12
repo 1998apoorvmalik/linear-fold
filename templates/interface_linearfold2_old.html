@@ -3,210 +3,128 @@
 {% extends "header.html" %} {% block content %}
 
 <title>LinearFold Web Server (beta)</title>
-<meta charset="utf-8" />
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1, shrink-to-fit=no"
-/>
-<link
-  rel="stylesheet"
-  href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
-/>
-<!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those Files -->
-<script type="text/javascript" language="javascript">
-  var versionUpdate = new Date().getTime();
-  var csslink = document.createElement("link");
-  csslink.rel = "stylesheet";
-  csslink.type = "text/css";
-  csslink.href = "/css/interface.css?v=" + versionUpdate;
-  document.head.appendChild(csslink);
-</script>
 
-<fieldset class="bigfield">
-  <legend>Interactive demo</legend>
-  <form method="POST" class="userSeq" enctype="multipart/form-data">
-    <fieldset>
-      <legend><i>Add a sequence</i></legend>
-      <b>Paste</b> or <b>type</b> your sequence here (length &lt; 100,000):
-      <br />
-      <!--<textarea name="seqInput" id="seqInput" rows="10" cols="120" placeholder=">name &#x0a;GGUUAAGCGACUAAGCGUACACGGUGGAUGCCCUGGCAGUCAGAGGCGAUGAAGG" ></textarea>-->
-      <textarea name="seqInput" id="seqInput" rows="10" cols="80">
->name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU</textarea
-      >
-
-      <div class="dropdown-sample">
-        <button class="dropbtn-sample">Samples <small>▼</small></button>
-        <div class="dropdown-sample-content">
-          <span onclick="sampleInput(0)" id="sample1"
-            >sample1: tRNA_tdbR00000566-Homo_sapiens-9606-Tyr-9PA (len:76)</span
-          >
-          <span onclick="sampleInput(1)" id="sample2"
-            >sample2: SRP_Oryz.sati._AC079888 (len:311)</span
-          >
-          <span onclick="sampleInput(2)" id="sample3"
-            >sample3: 16S rRNA_A.pyrophilus (len:1564)</span
-          >
-          <span onclick="sampleInput(3)" id="sample4"
-            >sample4: 23S rRNA_T.thermophilus (len:2915)</span
-          >
-        </div>
-      </div>
-      <br />
-
-      Or <b>upload</b> a file in FASTA format: <br />
-      <div class="file-upload">
-        <div class="file-select">
-          <div class="file-select-button" id="fileName">Choose File</div>
-          <div class="file-select-name" id="noFile">No file chosen...</div>
-          <input
-            type="file"
-            name="seqFile"
-            id="seqFile"
-            accept=".txt, .fasta"
-          /><br />
-          <!--
-		        <input type="file" name="seqFile" id="seqFile" accept=".txt" onchange=loaded()>
-		        <input type="file" name="seqFile" id="seqFile" accept=".txt" onchange="form.submit()">
-		    	-->
-        </div>
-      </div>
-    </fieldset>
+<form method="POST" class="userSeq" enctype="multipart/form-data">
+  <fieldset>
+    <legend>Add a sequence</legend>
+    <b>Paste</b> or <b>type</b> your sequence here (length &lt; 100,000):
     <br />
 
-    <fieldset>
-      <legend><i>Arguments</i></legend>
-      <b>Beam size</b> (1-200):
-      <input
-        type="text"
-        name="beamSize"
-        id="beamSize"
-        placeholder="100"
-        maxlength="3"
-        size="10"
-      /><br />
+    <div class="form-group">
+      <textarea class="form-control" name="seqInput" id="seqInput" rows="5" cols="80">
+name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
+      </textarea>
+    </div>
 
-      <b>Constraints</b>
-      <input
-        type="checkbox"
-        id="constrBox"
-        name="constrBox"
-        value="constrBox"
-      />
-      (one more line as structure constraints)
-      <!--&nbsp &nbsp &nbsp "<code>?</code>", "<code>.</code>", "<code>(</code>" and "<code>)</code>", each indicates a position for which the proper matching is unknown, unpaired, left or right parenthesis, respectively. -->
-      <span id="constrant_intro" hidden
-        ><br />&nbsp &nbsp &nbsp <code>?</code> <code>.</code> <code>(</code>
-        <code>)</code>, each indicates a position for which the proper matching
-        is <code>unknown</code>, <code>unpaired</code>, <code>left</code> or
-        <code>right parenthesis</code>, respectively.
-      </span>
-      <br />
-      <b>Zuker suboptimal structures</b>
-      <input type="checkbox" id="zukerBox" name="zukerBox" value="zukerBox" />
-      <span id="zukerDeltaLine" hidden
-        ><br /><b>Absolute Score/Energy Difference</b> (0-10):
-        <input
-          type="text"
-          name="zukerDelta"
-          id="zukerDelta"
-          placeholder="5.0"
-          maxlength="2"
-          size="10"
-      /></span>
-    </fieldset>
+    <div class="dropdown mt-1">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Samples</button>
+      <ul class="dropdown-menu">
+        <li><button class="dropdown-item" type="button" onclick="sampleInput(0)">Sample1 (len: 76)</button></li>
+        <li><button class="dropdown-item" type="button" onclick="sampleInput(1)">Sample2 (len: 311)</button></li>
+        <li><button class="dropdown-item" type="button" onclick="sampleInput(2)">Sample3 (len: 1564)</button></li>
+        <li><button class="dropdown-item" type="button" onclick="sampleInput(3)">Sample4 (len: 2915)</button></li>
+      </ul>
+    </div>
+
+    <!-- Or <b>upload</b> a file in FASTA format: <br />
+    <div class="file-upload">
+      <div class="file-select">
+        <div class="file-select-button" id="fileName">Choose File</div>
+        <div class="file-select-name" id="noFile">No file chosen...</div>
+        <input type="file" name="seqFile" id="seqFile" accept=".txt, .fasta" /><br />
+      </div>
+    </div> -->
+
+    <div class="mt-2 mb-4">
+      <label for="formFile" class="form-label">Or <b>upload</b> a file in FASTA format </label>
+      <input class="form-control w-25" type="file" name="seqFile" id="seqFile" accept=".txt, .fasta" />
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Arguments</legend>
+    <b>Beam size</b> (1-200): <input type="text" name="beamSize" id="beamSize" placeholder="100" maxlength="3" size="10" /><br />
+
+    <b>Constraints</b>
+    <input type="checkbox" id="constrBox" name="constrBox" value="constrBox" />
+    (one more line as structure constraints)
+    <!--&nbsp &nbsp &nbsp "<code>?</code>", "<code>.</code>", "<code>(</code>" and "<code>)</code>", each indicates a position for which the proper matching is unknown, unpaired, left or right parenthesis, respectively. -->
+    <span id="constrant_intro" hidden
+      ><br />&nbsp &nbsp &nbsp <code>?</code> <code>.</code> <code>(</code> <code>)</code>, each indicates a position for which the proper matching is
+      <code>unknown</code>, <code>unpaired</code>, <code>left</code> or <code>right parenthesis</code>, respectively.
+    </span>
     <br />
+    <b>Zuker suboptimal structures</b>
+    <input type="checkbox" id="zukerBox" name="zukerBox" value="zukerBox" />
+    <span id="zukerDeltaLine" hidden
+      ><br /><b>Absolute Score/Energy Difference</b> (0-10):
+      <input type="text" name="zukerDelta" id="zukerDelta" placeholder="5.0" maxlength="2" size="10"
+    /></span>
+  </fieldset>
+  <br />
 
-    <fieldset hidden>
-      <legend><i>Available model(s)</i></legend>
-      <input type="checkbox" id="cfbox" name="cfbox" value="cfbox" checked />
-      <label for="cfbox"
-        ><b>LinearFold-C</b> (using
-        <a href="http://contra.stanford.edu/contrafold/" target="_blank"
-          >CONTRAfold v2.0</a
-        >
-        machine-learned model, Do et al 2006)</label
-      ><br />
+  <fieldset hidden>
+    <legend><i>Available model(s)</i></legend>
+    <input type="checkbox" id="cfbox" name="cfbox" value="cfbox" checked />
+    <label for="cfbox"
+      ><b>LinearFold-C</b> (using
+      <a href="http://contra.stanford.edu/contrafold/" target="_blank">CONTRAfold v2.0</a>
+      machine-learned model, Do et al 2006)</label
+    ><br />
 
-      <input
-        type="checkbox"
-        id="vnbox"
-        name="vnbox"
-        value="vnbox"
-        checked
-        disabled
-      />
-      <label for="vnbox"
-        ><b>LinearFold-V</b> (using
-        <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank"
-          >Vienna RNAfold</a
-        >
-        thermodynamic model, Lorenz et al 2011, with parameters from Mathews et
-        al 2004)</label
-      ><br />
-      <!--
+    <input type="checkbox" id="vnbox" name="vnbox" value="vnbox" checked disabled />
+    <label for="vnbox"
+      ><b>LinearFold-V</b> (using
+      <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a>
+      thermodynamic model, Lorenz et al 2011, with parameters from Mathews et al 2004)</label
+    ><br />
+    <!--
                     <input type="checkbox" id="vnbox" name="vnbox" value="vnbox" disabled>
                     <label for="cfbox"><b>LinearPartition-V</b> </label><br>
                     -->
-    </fieldset>
-    <br />
+  </fieldset>
 
-    <input type="submit" value="Run LinearFold >>" onclick="loading()" />&nbsp
-    &nbsp &nbsp
-    <input type="reset" value="Reset" />
-  </form>
-  <div id="loadingIMG" style="display: none">
-    <img
-      src="https://raw.githubusercontent.com/KaiboLiu/PairingWebDemo/master/img/loading1.gif"
-      alt="Loading..."
-      height="160"
-    />
+  <!-- <input type="submit" value="Run LinearFold >>" onclick="loading()" />&nbsp &nbsp &nbsp
+      <input type="reset" value="Reset" /> -->
+
+  <input type="submit" class="btn btn-primary" value="Run LinearFold" onclick="loading()" />
+  <input type="reset" class="btn btn-secondary" value="Reset" />
+</form>
+<div id="loadingIMG" style="display: none">
+  <img src="https://raw.githubusercontent.com/KaiboLiu/PairingWebDemo/master/img/loading1.gif" alt="Loading..." height="160" />
+</div>
+
+{% endblock %} {% block info %}
+<br /><br />
+
+<fieldset>
+  <div class="card">
+    <legend>LinearPartition</legend>
+    <p>
+      Interactive demos for LinearPartition (using
+      <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a>
+      thermodynamic model, Lorenz et al 2011, with parameters from Mathews et al 2004)
+    </p>
+    <a href="{{ url_for('my_form_LP') }}"><button type="button" id="jumpBtn">Go to LinearPartition >></button></a>
   </div>
 </fieldset>
 <br /><br />
 
-<fieldset class="bigfield">
-  <legend>LinearPartition</legend>
-  <p>
-    Interactive demos for LinearPartition (using
-    <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank"
-      >Vienna RNAfold</a
-    >
-    thermodynamic model, Lorenz et al 2011, with parameters from Mathews et al
-    2004)
-  </p>
-  <a href="{{ url_for('my_form_LP') }}"
-    ><button type="button" id="jumpBtn">Go to LinearPartition >></button></a
-  >
-</fieldset>
-<br /><br />
-
-<fieldset class="bigfield">
-  <legend>Preset demo for LinearFold</legend>
-  <p>
-    Example demos for <span class="coloredSeq">16S rRNA</span>/<span
-      class="coloredSeq"
-      >23S rRNA</span
-    >/<span class="coloredSeq">Group I Intron</span> are available, compared
-    with
-    <a href="http://contra.stanford.edu/contrafold/" target="_blank"
-      >CONTRAfold v2.0</a
-    >
-    and
-    <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank"
-      >Vienna RNAfold</a
-    >
-    algorithms.
-  </p>
-  <!--
-		<a href="http://web.engr.oregonstate.edu/~liukaib/demo_json+canvas.html"><button type="button" id="jumpBtn">Go to demos >> </button></a>
-		<a href="{{ url_for('my_form_LV') }}/preset.html"><button type="button" id="jumpBtn">Go to demos >> </button></a>
-                -->
-  <a href="{{ url_for('preset') }}"
-    ><button type="button" id="jumpBtn">Go to demos >></button></a
-  >
-  <!--
-		<a href="http://linearfold.eecs.oregonstate.edu/preset.html"><button type="button" id="jumpBtn">Go to demos >> </button></a>
-                -->
+<fieldset>
+  <div class="card">
+    <legend>Preset demo for LinearFold</legend>
+    <p>
+      Example demos for <span class="coloredSeq">16S rRNA</span>/<span class="coloredSeq">23S rRNA</span>/<span class="coloredSeq"
+        >Group I Intron</span
+      >
+      are available, compared with
+      <a href="http://contra.stanford.edu/contrafold/" target="_blank">CONTRAfold v2.0</a>
+      and
+      <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a>
+      algorithms.
+    </p>
+    <a href="{{ url_for('preset') }}"><button type="button" id="jumpBtn">Go to demos >></button></a>
+  </div>
 </fieldset>
 
 <br />
@@ -215,64 +133,35 @@
     <p></p>
     <p>Please cite the following paper:</p>
     <div style="font-size: 19px">
-      * Liang Huang, **He Zhang, **Dezhong Deng, Kai Zhao, Kaibo Liu, David
-      Hendrix, and David H. Mathews (2019).
+      * Liang Huang, **He Zhang, **Dezhong Deng, Kai Zhao, Kaibo Liu, David Hendrix, and David H. Mathews (2019).
       <b
-        ><a
-          href="https://academic.oup.com/bioinformatics/article/35/14/i295/5529205"
-          target="_blank"
-          >LinearFold: Linear-Time Approximate RNA Folding by 5’-to-3’ Dynamic
-          Programming and Beam Search</a
+        ><a href="https://academic.oup.com/bioinformatics/article/35/14/i295/5529205" target="_blank"
+          >LinearFold: Linear-Time Approximate RNA Folding by 5’-to-3’ Dynamic Programming and Beam Search</a
         ></b
-      >. <i>Bioinformatics</i>, Volume 35, Issue 14, July 2019, Pages i295–i304.
-      ISMB 2019
+      >. <i>Bioinformatics</i>, Volume 35, Issue 14, July 2019, Pages i295–i304. ISMB 2019
     </div>
     *Corresponding Author, **Equal Contribution.
 
     <div>
       Code:
-      <a
-        href="https://github.com/LinearFold"
-        class="fa fa-github"
-        target="_blank"
-        style="text-decoration: none"
-      >
-        github</a
-      >
+      <a href="https://github.com/LinearFold" class="fa fa-github" target="_blank" style="text-decoration: none"> github</a>
       (implemented by
       <b><a href="http://kaizhao.me" target="_blank">Kai Zhao</a></b
-      >,
-      <b
-        ><a href="https://dengdezhong.weebly.com/" target="_blank"
-          >Dezhong Deng</a
-        ></b
-      >,
-      <b
-        ><a href="https://eecs.oregonstate.edu/people/Zhang-He" target="_blank"
-          >He Zhang</a
-        ></b
-      >, and
-      <b
-        ><a href="http://web.engr.oregonstate.edu/~huanlian/" target="_blank"
-          >Liang Huang</a
-        ></b
+      >, <b><a href="https://dengdezhong.weebly.com/" target="_blank">Dezhong Deng</a></b
+      >, <b><a href="https://eecs.oregonstate.edu/people/Zhang-He" target="_blank">He Zhang</a></b
+      >, and <b><a href="http://web.engr.oregonstate.edu/~huanlian/" target="_blank">Liang Huang</a></b
       >)
     </div>
-    <!--<div style="font-size:14px">-->
     <div>
       Web Demo designed by
       <b><a href="https://kaiboliu.github.io" target="_blank">Kaibo Liu</a></b>
       (liukaib_AT_oregonstate.edu)
     </div>
     <br />
-    <br />
     <!--
              <div style="font-size:14px">* Dezhong Deng, Kai Zhao, David Hendrix, David H. Mathews, and Liang Huang (2018). <I>Linear-Time Prediction of RNA Secondary Structures</I>. <a href="https://www.biorxiv.org/content/early/2018/02/14/263509" target="_blank">bioRxiv</a>.</div>
              -->
   </div>
-  <br />
 </div>
-
-<script src="/js/jquery.min.js"></script>
 
 {% endblock %}

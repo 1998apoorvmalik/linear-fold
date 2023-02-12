@@ -40,7 +40,7 @@ pairingDir = "./static/pairingRes/"
 pairingName, total_time = "", 0
 LTFDir = "./static/LTFDir/"
 
-demoURL = "/"
+demoURL = "/linearfold"
 demoURL_v = "/v"
 partitionURL = "/partition"
 partitionURL_v = "/partition_v"
@@ -75,15 +75,14 @@ def my_form_LS_v():
 
 @app.route(demoURL)
 def my_form_old():
-    if LOCAL_TESTING:
-        return flask.render_template("interface_linearfold2_old.html")
+    return flask.render_template("interface_linearfold2_old.html")
 
-    return redirect("https://46cf-128-193-8-41.ngrok.io", code=302)
 
-# delete later
-@app.route("/test")
-def test():
-    return flask.render_template("header.html")
+# / route
+@app.route("/")
+def index():
+    # redirect to demoUrl
+    return redirect(url_for("my_form_old"))
 
 
 # Linear Sankoff
