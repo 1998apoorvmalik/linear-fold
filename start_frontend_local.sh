@@ -1,5 +1,5 @@
-IP=10.217.112.93
-PORT=8080
+IP=0.0.0.0
+PORT=8090
 
 source venv/bin/activate
 

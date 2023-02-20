@@ -20,10 +20,6 @@
 
 <div id="result-page"></div>
 
-<!-- create a toggle bar to toggle between two divs -->
-
-<!-- <input type="checkbox" name="PlotSelector" id="toggler" checked /> -->
-<!-- <label for="PlotSelector"> Interactive Plot</label><br /><br /> -->
 <h3>Figure</h3>
 <div class="form-check form-switch">
   <input class="form-check-input" type="checkbox" role="switch" id="toggler" name="PlotSelector" checked />
@@ -34,12 +30,15 @@
   <img src="data:image/png;base64, {{ data['plot'] }}" style="display: block; margin-left: auto; margin-right: auto; width: 75%" />
 </div>
 <div id="figure">
-  <button type="button" class="btn btn-dark btn-sm" onclick="zoomIn()">Zoom in</button>
-  <button type="button" class="btn btn-dark btn-sm" onclick="zoomOut()">Zoom out</button>
-  <button type="button" class="btn btn-dark btn-sm" onclick="resetZoom()">Reset zoom</button>
-  <button type="button" class="btn btn-dark btn-sm" onclick="panLeft()">Pan left</button>
-  <button type="button" class="btn btn-dark btn-sm" onclick="panRight()">Pan right</button>
-  <button type="button" class="btn btn-dark btn-sm" onclick="center()">Center</button>
+  <div>
+    <button type="button" class="btn btn-dark btn-sm" onclick="zoomIn()">Zoom in</button>
+    <button type="button" class="btn btn-dark btn-sm" onclick="zoomOut()">Zoom out</button>
+    <button type="button" class="btn btn-dark btn-sm" onclick="resetZoom()">Reset zoom</button>
+    <button type="button" class="btn btn-dark btn-sm" onclick="panLeft()">Pan left</button>
+    <button type="button" class="btn btn-dark btn-sm" onclick="panRight()">Pan right</button>
+    <button type="button" class="btn btn-dark btn-sm" onclick="center()">Center</button>
+  </div>
+
   <div class="mt-2">
     <div class="legend-box" style="background-color: teal"></div>
     &nbsp; Pairing
@@ -74,8 +73,6 @@
   <p>Time: {{ data["time"] }} seconds</p>
   <button type="button" class="btn btn-primary" onclick="downloadResult()">Download Results</button>
 </div>
-
-<br />
 
 <script src="/js/jquery.min.js"></script>
 
@@ -121,5 +118,4 @@
       a.click();
     }
 </script>
-
-{% endblock %}
+{% endblock %} {% block info %} {% include 'linear-sankoff/info-template.html' %} {% endblock %}

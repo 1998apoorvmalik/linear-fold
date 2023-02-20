@@ -37,7 +37,7 @@
               <a id="linearfold" class="nav-link" aria-current="page" href="{{ url_for('my_form_old') }}">LinearFold</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="{{ url_for('my_form_LP') }}">LinearPartition</a>
+              <a id="partition" class="nav-link" aria-current="page" href="{{ url_for('my_form_LP') }}">LinearPartition</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" aria-current="page" href="{{ url_for('my_form_LS_v') }}">LinearSampling</a>
@@ -60,17 +60,15 @@
         <legend><h3 class="card-title">Interactive demo</h3></legend>
         <hr class="hr" />
         {% block content %}{% endblock %}
+        <div class="d-flex align-items-center mt-2" id="loadingIMG" style="display: none !important">
+          <strong>Loading...</strong>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="spinner-border" role="status" aria-hidden="true"></div>
+        </div>
       </div>
     </fieldset>
 
     {% block info %} {% endblock %}
-
-    <div class="d-flex align-items-center mt-2" id="loadingIMG" style="display: none !important">
-      <strong>Loading...</strong>
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      <div class="spinner-border" role="status" aria-hidden="true"></div>
-    </div>
-
     <div class="mt-4" id="footer">
       <div id="other">
         <legend>Some Other RNA Secondary Structure Prediction Web Servers</legend>

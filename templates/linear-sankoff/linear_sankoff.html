@@ -21,19 +21,16 @@ CCUGGCGGCGAUAGUGCGGUGGACCCACCUGAGACCAUACCGAACUCAGAAGUGAAACGCUGUAAUGCCGAUGGUAGUGU
     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Samples</button>
     <ul class="dropdown-menu">
       <li>
-        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(0)">Sample1 (Domain Insertion Demo)</button>
+        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(0)">Sample 1 (tRNA, domain insertion)</button>
       </li>
       <li>
-        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(1)">Sample2 (Domain Insertion Demo)</button>
+        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(1)">Sample 2</button>
       </li>
       <li>
-        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(2)">Sample3</button>
+        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(2)">Sample 3</button>
       </li>
       <li>
-        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(3)">Sample4</button>
-      </li>
-      <li>
-        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(4)">Sample5</button>
+        <button class="dropdown-item" type="button" onclick="loadLinearSankoffSample(3)">Sample 4</button>
       </li>
     </ul>
   </div>
@@ -85,4 +82,4 @@ CCUGGCGGCGAUAGUGCGGUGGACCCACCUGAGACCAUACCGAACUCAGAAGUGAAACGCUGUAAUGCCGAUGGUAGUGU
   <input type="reset" class="btn btn-secondary" value="Reset" />
 </form>
 
-{% endblock %}
+{% endblock %} {% block info %} {% include 'linear-sankoff/info-template.html' %} {% endblock %}

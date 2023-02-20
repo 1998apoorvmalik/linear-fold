@@ -1,97 +1,104 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>LinearFold Web Server (beta)</title>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>LinearFold Web Server (beta)</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,900,900i">
-<link rel="stylesheet" type="text/css" href="/css/showCircle.css">
-</head>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,900,900i" />
+    <link rel="stylesheet" type="text/css" href="/css/showCircle.css" />
+  </head>
 
-<body>
-<div id="pageTitle">LinearPartition Web Server (beta) <div class="nav-right"><a href="{{ url_for('my_form_old') }}">LinearFold</a> &nbsp&nbsp&nbsp <a href="{{ url_for('my_form_LP') }}" class="nav-act">LinearPartition</a>&nbsp&nbsp&nbsp
+  <body>
+    <div id="pageTitle">
+      LinearPartition Web Server (beta)
+      <div class="nav-right">
+        <a href="{{ url_for('my_form_old') }}">LinearFold</a> &nbsp&nbsp&nbsp
+        <a href="{{ url_for('my_form_LP') }}" class="nav-act">LinearPartition</a>&nbsp&nbsp&nbsp
         <a href="{{ url_for('my_form_LS_v') }}">LinearSampling</a>
         &nbsp&nbsp&nbsp<a href="{{ url_for('my_form_LTF') }}">LinearTurboFold</a>
-</div></div>
-<!--
+      </div>
+    </div>
+    <!--
 <a class="jumpLink" href="http://linearfold.eecs.oregonstate.edu:8080" style="font-size:130%;"> &nbsp; back to homepage&nbsp; </a>
 -->
-<a class="btn-back" href="{{ url_for('my_form_LP') }}">
-  <span> &nbsp; back to homepage &nbsp;</span>
-</a><br><br>
-<p>Sequence name: <span id="nameEcho" style="color:red;font-size:120%;"></span></p>
-<p>Beam Size: <span id="beamEcho" style="color:red;font-size:120%;"></span> &nbsp;&nbsp;&nbsp;
-   <br>
-   LinearPartition-C:&nbsp;&nbsp;&nbsp;
-   Partition Function: <span id="timeLCEcho" style="color:red;font-size:100%;">Not given</span>s&nbsp;&nbsp;&nbsp;
-   Base Pairing Probabilities: <span id="time2LCEcho" style="color:red;font-size:100%;">Not given</span>s&nbsp;&nbsp;&nbsp;
-   <br>
-   LinearPartition-V:&nbsp;&nbsp;&nbsp;
-   Partition Function: <span id="timeLVEcho" style="color:red;font-size:100%;">Not given</span>s&nbsp;&nbsp;&nbsp;
-   Base Pairing Probabilities: <span id="time2LVEcho" style="color:red;font-size:100%;">Not given</span>s&nbsp;&nbsp;&nbsp;
-   <!--LinearFold-C: <span id="timeLCEcho" style="color:red;font-size:100%;">Not given</span>s-->
-   <!--&nbsp;&nbsp;&nbsp;Total time: <span style="color:red;font-size:100%;">{{total_time}}</span>s-->
-</p>
+    <a class="btn-back" href="{{ url_for('my_form_LP') }}"> <span> &nbsp; Back &nbsp;</span> </a><br /><br />
+    <p>Sequence name: <span id="nameEcho" style="color: red; font-size: 120%"></span></p>
+    <p>
+      Beam Size: <span id="beamEcho" style="color: red; font-size: 120%"></span> &nbsp;&nbsp;&nbsp;
+      <br />
+      LinearPartition-C:&nbsp;&nbsp;&nbsp; Partition Function:
+      <span id="timeLCEcho" style="color: red; font-size: 100%">Not given</span>s&nbsp;&nbsp;&nbsp; Base Pairing Probabilities:
+      <span id="time2LCEcho" style="color: red; font-size: 100%">Not given</span>s&nbsp;&nbsp;&nbsp;
+      <br />
+      LinearPartition-V:&nbsp;&nbsp;&nbsp; Partition Function:
+      <span id="timeLVEcho" style="color: red; font-size: 100%">Not given</span>s&nbsp;&nbsp;&nbsp; Base Pairing Probabilities:
+      <span id="time2LVEcho" style="color: red; font-size: 100%">Not given</span>s&nbsp;&nbsp;&nbsp;
+      <!--LinearFold-C: <span id="timeLCEcho" style="color:red;font-size:100%;">Not given</span>s-->
+      <!--&nbsp;&nbsp;&nbsp;Total time: <span style="color:red;font-size:100%;">{{total_time}}</span>s-->
+    </p>
 
-<!-- Back to top button -->
-<a id="return-to-top"></a>
+    <!-- Back to top button -->
+    <a id="return-to-top"></a>
 
-<svg version="1.1" id="mySVG" width="1700" height="600"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<!--<svg id="mySVG" viewBox="0 0 500 1200"  xmlns="http://www.w3.org/2000/svg">-->
-  Your browser doesn't support svg tag.
-</svg>
-<svg version="1.1" id="mySVG_MEA" width="1700" height="600"  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  Your browser doesn't support svg tag.
-</svg>
+    <svg version="1.1" id="mySVG" width="1700" height="600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <!--<svg id="mySVG" viewBox="0 0 500 1200"  xmlns="http://www.w3.org/2000/svg">-->
+      Your browser doesn't support svg tag.
+    </svg>
+    <svg version="1.1" id="mySVG_MEA" width="1700" height="600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      Your browser doesn't support svg tag.
+    </svg>
 
-<p hidden>
-  <span id='fornaInfo'></span>
-  <button id="dispFornaToggle" onclick="dispForna()">Show</button>
-  <br>
-  <a id='fornalink2' class="jumpLink" href="" target="_blank"></a>
-  &nbsp;&nbsp;
-  <a hidden id='fornalink1' class="jumpLink" href="" target="_blank"></a>
-</p>
+    <p hidden>
+      <span id="fornaInfo"></span>
+      <button id="dispFornaToggle" onclick="dispForna()">Show</button>
+      <br />
+      <a id="fornalink2" class="jumpLink" href="" target="_blank"></a>
+      &nbsp;&nbsp;
+      <a hidden id="fornalink1" class="jumpLink" href="" target="_blank"></a>
+    </p>
 
-
-<div id='forna' style="display:none"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<!--
+    <div id="forna" style="display: none">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <!--
 <iframe id='forna1' src="about:blank" height="600" width="40%" onload="setFocus()"></iframe>&nbsp;&nbsp;
 <iframe id='forna2' src="about:blank" height="600" width="40%" onload="setFocus()"></iframe>
 -->
-<iframe id='forna2' src="about:blank" height="500" width="600"></iframe> &nbsp;&nbsp;
-<iframe hidden id='forna1' src="about:blank" height="500" width="600"></iframe>
-</div>
+      <iframe id="forna2" src="about:blank" height="500" width="600"></iframe> &nbsp;&nbsp;
+      <iframe hidden id="forna1" src="about:blank" height="500" width="600"></iframe>
+    </div>
 
-<p><span id="seq0" style="color:#3bbee2;"></span><button id="btn_copy_seq" onclick="cp_seq()"></button><br>
-  <span id="seq" class="res" style="display:none"></span>
-  <span id="seq-show" class="res" style="display: inline-block;"></span> </p>
-<p><span id="lcf0" style="color:#3bbee2;"></span><button id="btn_copy_lcf" onclick="cp_lcf()"></button><br>
-  <span id="lcf" class="res" style="display:none"></span>
-  <span id="lcf-show" class="res" style="display: inline-block;"></span> </p>
-<p><span id="lvn0" style="color:#3bbee2;"></span><button id="btn_copy_lvn" onclick="cp_lvn()"></button><br>
-  <span id="lvn" class="res" style="display:none"></span>
-  <span id="lvn-show" class="res" style="display: inline-block;"></span> </p>
+    <p>
+      <span id="seq0" style="color: #3bbee2"></span><button id="btn_copy_seq" onclick="cp_seq()"></button><br />
+      <span id="seq" class="res" style="display: none"></span>
+      <span id="seq-show" class="res" style="display: inline-block"></span>
+    </p>
+    <p>
+      <span id="lcf0" style="color: #3bbee2"></span><button id="btn_copy_lcf" onclick="cp_lcf()"></button><br />
+      <span id="lcf" class="res" style="display: none"></span>
+      <span id="lcf-show" class="res" style="display: inline-block"></span>
+    </p>
+    <p>
+      <span id="lvn0" style="color: #3bbee2"></span><button id="btn_copy_lvn" onclick="cp_lvn()"></button><br />
+      <span id="lvn" class="res" style="display: none"></span>
+      <span id="lvn-show" class="res" style="display: inline-block"></span>
+    </p>
 
+    <div class="tooltipbox"></div>
+    <p id="path" hidden>{{pairingRes}}</p>
 
-<div class="tooltipbox"></div>
-<p id='path' hidden>{{pairingRes}}</p>
+    <script src="/js/demo_tooltips.js"></script>
 
-<script src="/js/demo_tooltips.js"></script>
-
-      <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those Files -->
-        <script type="text/javascript" language="javascript">
-        var versionUpdate = (new Date()).getTime();
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = "/js/showCircle_linearpartition2.js?v=" + versionUpdate;
-        document.body.appendChild(script);
-        </script>
-
-
-</body>
+    <!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those Files -->
+    <script type="text/javascript" language="javascript">
+      var versionUpdate = new Date().getTime();
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "/js/showCircle_linearpartition2.js?v=" + versionUpdate;
+      document.body.appendChild(script);
+    </script>
+  </body>
 </html>

@@ -63,8 +63,8 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
   </fieldset>
   <br />
 
-  <fieldset hidden>
-    <legend><i>Available model(s)</i></legend>
+  <fieldset>
+    <legend>Available model(s)</legend>
     <input type="checkbox" id="cfbox" name="cfbox" value="cfbox" checked />
     <label for="cfbox"
       ><b>LinearFold-C</b> (using
@@ -87,6 +87,7 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
   <!-- <input type="submit" value="Run LinearFold >>" onclick="loading()" />&nbsp &nbsp &nbsp
       <input type="reset" value="Reset" /> -->
 
+  <br />
   <input type="submit" class="btn btn-primary" value="Run LinearFold" onclick="loading()" />
   <input type="reset" class="btn btn-secondary" value="Reset" />
 </form>
@@ -105,7 +106,7 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
       <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a>
       thermodynamic model, Lorenz et al 2011, with parameters from Mathews et al 2004)
     </p>
-    <a href="{{ url_for('my_form_LP') }}"><button type="button" id="jumpBtn">Go to LinearPartition >></button></a>
+    <a href="{{ url_for('my_form_LP') }}"><button type="button" class="btn btn-primary" id="jumpBtn">Go to LinearPartition</button></a>
   </div>
 </fieldset>
 <br /><br />
@@ -123,7 +124,7 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
       <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a>
       algorithms.
     </p>
-    <a href="{{ url_for('preset') }}"><button type="button" id="jumpBtn">Go to demos >></button></a>
+    <a href="{{ url_for('preset') }}"><button type="button" class="btn btn-primary" id="jumpBtn">Go to demos</button></a>
   </div>
 </fieldset>
 

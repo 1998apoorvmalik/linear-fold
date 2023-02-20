@@ -40,7 +40,7 @@ pairingDir = "./static/pairingRes/"
 pairingName, total_time = "", 0
 LTFDir = "./static/LTFDir/"
 
-demoURL = "/linearfold"
+demoURL = "/"
 demoURL_v = "/v"
 partitionURL = "/partition"
 partitionURL_v = "/partition_v"
@@ -79,7 +79,7 @@ def my_form_old():
 
 
 # / route
-@app.route("/")
+@app.route("/", methods=["GET"])
 def index():
     # redirect to demoUrl
     return redirect(url_for("my_form_old"))
@@ -112,9 +112,13 @@ def my_form_LS():
 
         data = requests.post(url, json=arguments).json()
         data['time'] = str(round(float(data['time']), 2))
-        return flask.render_template("showResult_linearsankoff.html", data=data)
+        return flask.render_template("linear-sankoff/showResult_linearsankoff.html", data=data)
 
-    return flask.render_template("linear_sankoff.html")
+    return flask.render_template("linear-sankoff/linear_sankoff.html")
+
+@app.route('/linearsankoff-pdf/')
+def show_linearsankoff_pdf():
+    return send_file('./linear_sankoff_paper.pdf')
 
 
 @app.route(os.path.join(demoURL_v, "res_<name>=<dld_cmt>"))
@@ -482,8 +486,7 @@ def inputSeq_LP():
 
             # beamsize = 100
             if LP_v_only:
-                if True:
-                    # try:
+                try:
                     newurl = LP_v_core(filename, seq, seqName, beamsize, T0, usrIP)
                     if newurl == "wrong":
                         flask.flash(
@@ -491,12 +494,11 @@ def inputSeq_LP():
                         )
                         return flask.render_template("interface_linearpartition2.html")
                     return flask.redirect(newurl)
-                # except:
-                #    flask.flash("Sorry, Something wrong dealing with the sequence with linearPartition.\nPlease try again")
-                #    return flask.render_template('interface_linearpartition2.html')
-                # return "Sorry, Something wrong dealing with the sequence during LinearPartition-V only mode"
-                # if True:
-                # try:
+                except:
+                   flask.flash("Sorry, Something wrong dealing with the sequence with linearPartition.\nPlease try again")
+                   return flask.render_template('interface_linearpartition2.html')
+
+            try:
                 outLPv = ironcreekOutDir + filename + ".lpv.res"  # output path for linearPartition-V
                 outLPc = ironcreekOutDir + filename + ".lpc.res"  # output path for linearPartition-V
                 score_c, tc2, tc3, score_v, tv2, tv3 = request_ironcreek_lp(filename)
@@ -587,8 +589,8 @@ def inputSeq_LP():
                 newurl = flask.url_for("showRes_LP", name=filename)
                 return flask.redirect(newurl)
 
-            # except:
-            #    return "Sorry, Something wrong dealing with the sequence (LinearPartition)"
+            except:
+               return "Sorry, Something wrong dealing with the sequence (LinearPartition)"
 
 
 @app.route(demoURL, methods=["GET", "POST"])
@@ -702,7 +704,6 @@ def inputSeq():
             f.close()
             T0 = time.time()
             if LF_v_only:
-                # if True:
                 try:
                     newurl = LF_v_core(
                         filename,
@@ -967,8 +968,8 @@ def request_ironcreek_v(seqfile):
     port2 = 11111  # set port
 
     s2.connect((host, port2))
-    # seqfile_s = bytes(seqfile,'UTF-8')
-    s2.send(seqfile)
+    seqfile_s = bytes(seqfile,'UTF-8')
+    s2.send(seqfile_s)
     t2 = s2.recv(1024)
 
     s2.close()
