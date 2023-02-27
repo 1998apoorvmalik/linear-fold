@@ -1,0 +1,7 @@
+[Float, w]        \lambda (weight on alignment, 0.0 - 1.0): 0.3
+[Integer, b]      Beam Size (LinearSankoff, 1 - 100): 100
+[Integer, LFb]    Beam Size (LinearFold in preprocessing, 1 - 100): 100
+[Float, energyDiff]   Maximum Energy Difference from MFE (0 - 1): 0.3
+[Integer, LAb]    Beam Size (LinearAlignment in preprocessing, 1 - 100): 100
+[Integer, LAw]    Alignment Band Width (0-100, 0 uses posterior probabilistic alignment region): 0
+[Boolean, branch] Domain Insertion: False 
