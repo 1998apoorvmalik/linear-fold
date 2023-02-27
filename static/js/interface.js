@@ -116,3 +116,8 @@ window.onload = function (e) {
   $("#jobID").val(Date.now().toString(36) + Math.random().toString(36).substring(7));
   // console.log($('#jobID').val());
 };
+
+function makeFornaUrl(baseUrl, sequence, structure) {
+  let url = baseUrl + "?id=fasta&file=%3Eheader%5Cn" + sequence + "%5Cn" + structure;
+  return url;
+}

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 
 {% extends "header.html" %} {% block content %}
+<script>
+  const FORNA_URL = "https://forna-server.herokuapp.com/";
+</script>
 
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
 <link rel="stylesheet" href="css/styles.css" />
 <script src="https://d3js.org/d3.v6.min.js"></script>
 
@@ -53,6 +55,53 @@
 </div>
 
 <br />
+
+<p>
+  <button
+    class="btn btn-primary"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#forna-view"
+    aria-expanded="false"
+    aria-controls="forna-view"
+    id="forna-view-button"
+    onclick="toggleFornaView()"
+  >
+    <script>
+      var fornaView = true;
+      function toggleFornaView() {
+        fornaView = !fornaView;
+        if (fornaView) {
+          document.getElementById("forna-view-button").innerHTML = "Hide Forna";
+        } else {
+          document.getElementById("forna-view-button").innerHTML = "Show Forna";
+        }
+      }
+      toggleFornaView();
+    </script>
+  </button>
+</p>
+<div class="collapse" id="forna-view">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-md-12">
+        <iframe id="forna-view-seq1" class="w-100" height="500"></iframe>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <iframe id="forna-view-seq2" class="w-100" height="500"></iframe>
+      </div>
+    </div>
+  </div>
+  <script>
+    var fornaViewSeq1 = document.getElementById("forna-view-seq1");
+    fornaViewSeq1.src =
+      FORNA_URL + "?id=fasta&file=%3Eheader%5Cn" + "{{ data['alignment 1'] }}".replace(/-/g, "") + "%5Cn" + "{{ data['structure 1'] }}";
+    var fornaViewSeq2 = document.getElementById("forna-view-seq2");
+    fornaViewSeq2.src =
+      FORNA_URL + "?id=fasta&file=%3Eheader%5Cn" + "{{ data['alignment 2'] }}".replace(/-/g, "") + "%5Cn" + "{{ data['structure 2'] }}";
+  </script>
+  <br />
+</div>
 
 <div>
   <h3>Result</h3>

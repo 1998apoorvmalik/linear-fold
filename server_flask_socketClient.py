@@ -1,19 +1,9 @@
-#!/nfs/stak/users/liukaib/.virtualenvs/flask/bin/python
 # coding-utf8
-
-"""
-Developer: Kaibo(lrushx)
-Email: liukaib@oregonstate.edu
-Created Date: Jan 27, 2018
-"""
-
 # flake8: noqa
-
-LOCAL_TESTING = True
 
 import os
 import re
-import socket  # import socket module
+import socket
 import time
 
 import arc_pairing_single_json
@@ -22,6 +12,7 @@ import flask_cors
 import requests
 from flask import redirect, request, send_file, url_for
 from werkzeug.utils import secure_filename
+from dirs import user_data_directory, server_output_directory, pairing_result_directory, LTF_data_directory, user_log_file
 
 app = flask.Flask(__name__, static_url_path="", static_folder="static", template_folder="templates")
 
@@ -29,16 +20,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 flask_cors.CORS(app)
 
-fileDir = "/nfs/stak/users/liukaib/public_html/usrData/"
-# fileDir = os.path.join(os.getcwd(),"usrData")
-# logFile = "/nfs/stak/users/liukaib/public_html/demo_data_run/usrLog.txt"
-logFile = "./usrLog.txt"
-ironcreekOutDir = "/nfs/stak/users/liukaib/public_html/demo_ironcreekOut/"
-ironcreekOutDir_LTF = "/nfs/stak/users/liukaib/public_html/demo_ironcreekOut_LTF/"
-# pairingDir = "../demo_data_run/"
-pairingDir = "./static/pairingRes/"
 pairingName, total_time = "", 0
-LTFDir = "./static/LTFDir/"
 
 demoURL = "/"
 demoURL_v = "/v"
@@ -89,12 +71,6 @@ def index():
 @app.route(sankoffURL, methods=("GET", "POST"))
 def my_form_LS():
     if request.method == "POST":
-
-        if LOCAL_TESTING:
-            url = "http://0.0.0.0:7001/linear-sankoff"  # local server
-        else:
-            url = "http://10.217.112.122:7001/linear-sankoff"  # remote server
-
         url = "http://10.217.112.122:7001/linear-sankoff"  # remote server
 
         arguments = {
@@ -167,13 +143,13 @@ def inputSeq_LV():
             usrFile = flask.request.files["seqFile"]
             # filename += secure_filename(usrFile.filename)
             # filename = filename[:-4]
-            tmpPath = os.path.join(fileDir, "tmp")
+            tmpPath = os.path.join(user_data_directory, "tmp")
             usrFile.save(tmpPath)
             input_flag = True
 
             with open(tmpPath) as f:
                 lines = f.readlines()
-                seqName, seq, conSeq, input_flag = postprocessInputSeq(lines, is_constraint)
+                seqName, seq, conSeq, input_flag = postprocessInputSeq(lines)
                 if not input_flag:
                     return flask.redirect(flask.url_for("errorPage", text=seq))
                 ## text = f.readlines()
@@ -191,7 +167,7 @@ def inputSeq_LV():
         # upload part
         else:
             lines = text.split("\n")
-            seqName, seq, conSeq, input_flag = postprocessInputSeq(lines, is_constraint)
+            seqName, seq, conSeq, input_flag = postprocessInputSeq(lines)
             if not input_flag:
                 return flask.redirect(flask.url_for("errorPage", text=seq))
             ## lineStop = text.find('\n')
@@ -218,7 +194,7 @@ def inputSeq_LV():
             ## #print('len: {}'.format(len(seq)))
             seqName = secure_filename(seqName)
             filename += seqName
-            newPath = os.path.join(fileDir, filename)
+            newPath = os.path.join(user_data_directory, filename)
             f = open(newPath, "w")
             f.write("{}\n{}\n{}".format(seqName, seq, beamsize))
             f.close()
@@ -235,7 +211,7 @@ def inputSeq_LV():
 
 
 def LF_v_core(filename, seq, seqName, beamsize, T0, usrIP, conSeq=None, dld_cmt=": "):
-    outLv = ironcreekOutDir + filename + ".lv.res"  # output path for linearFold-V
+    outLv = server_output_directory + filename + ".lv.res"  # output path for linearFold-V
     t2 = request_ironcreek_v(filename)  # call lv functions in ironcreek, save results in files, return time
 
     f_lv = open(outLv, "r")
@@ -248,7 +224,7 @@ def LF_v_core(filename, seq, seqName, beamsize, T0, usrIP, conSeq=None, dld_cmt=
     score2 = "".join(re.findall("Score: ([\-0-9]+[.0-9]{0,3})", lv[line_idx_s]))  # Vincent version
     print("[time {}s] [score {}] [b {}] [LF file {}]".format(t2, score2, beamsize, filename))
     # write results of lc, lv to a final pairing.res result
-    pairingFile = pairingDir + filename + ".pairing.res"  # output with pairingName
+    pairingFile = pairing_result_directory + filename + ".pairing.res"  # output with pairingName
     arc_pairing_single_json.LoadSave_lv(
         pairingFile, seq, lv[line_idx_res][:-1], t2, beamsize, seqName, score2, conSeq
     )  # Vincent version
@@ -286,7 +262,7 @@ def inputSeq_LP_v():
             usrFile = flask.request.files["seqFile"]
             # filename += secure_filename(usrFile.filename)
             # filename = filename[:-4]
-            tmpPath = os.path.join(fileDir, "tmp")
+            tmpPath = os.path.join(user_data_directory, "tmp")
             usrFile.save(tmpPath)
             input_flag = True
 
@@ -337,7 +313,7 @@ def inputSeq_LP_v():
             seqName = secure_filename(seqName)
             filename += seqName
 
-            newPath = os.path.join(fileDir, filename)
+            newPath = os.path.join(user_data_directory, filename)
             f = open(newPath, "w")
             f.write("{}\n{}\n{}".format(seqName, seq, beamsize))
             f.close()
@@ -358,7 +334,7 @@ def inputSeq_LP_v():
 
 
 def LP_v_core(filename, seq, seqName, beamsize, T0, usrIP):
-    outLPv = ironcreekOutDir + filename + ".lpv.res"  # output path for linearPartition-V
+    outLPv = server_output_directory + filename + ".lpv.res"  # output path for linearPartition-V
     score2, t2, t3 = request_ironcreek_lp_v(filename)
 
     if score2 == "wrong":
@@ -387,9 +363,9 @@ def LP_v_core(filename, seq, seqName, beamsize, T0, usrIP):
             lst_v_mea += [i, j, float(a[2])]
 
     # write results of lpv to a final partition.res result (json)
-    pairingFile = pairingDir + filename + ".partition.res"  # output with pairingName
+    pairingFile = pairing_result_directory + filename + ".partition.res"  # output with pairingName
     arc_pairing_single_json.LoadSave_lpv(pairingFile, seq, lst, t2, t3, beamsize, seqName, score2)
-    pairingFile_mea = pairingDir + filename + ".partition.mea.res"  # output with pairingName
+    pairingFile_mea = pairing_result_directory + filename + ".partition.mea.res"  # output with pairingName
     arc_pairing_single_json.LoadSave_lpv(pairingFile_mea, seq, lst_v_mea, -1, -1, beamsize, seqName, score2, lpv_mea)
 
     T2 = time.time() - T0
@@ -429,7 +405,7 @@ def inputSeq_LP():
             usrFile = flask.request.files["seqFile"]
             # filename += secure_filename(usrFile.filename)
             # filename = filename[:-4]
-            tmpPath = os.path.join(fileDir, "tmp")
+            tmpPath = os.path.join(user_data_directory, "tmp")
             usrFile.save(tmpPath)
             input_flag = True
 
@@ -479,7 +455,7 @@ def inputSeq_LP():
             seqName = secure_filename(seqName)
             filename += seqName
 
-            newPath = os.path.join(fileDir, filename)
+            newPath = os.path.join(user_data_directory, filename)
             f = open(newPath, "w")
             f.write("{}\n{}\n{}".format(seqName, seq, beamsize))
             f.close()
@@ -499,8 +475,8 @@ def inputSeq_LP():
                    return flask.render_template('interface_linearpartition2.html')
 
             try:
-                outLPv = ironcreekOutDir + filename + ".lpv.res"  # output path for linearPartition-V
-                outLPc = ironcreekOutDir + filename + ".lpc.res"  # output path for linearPartition-V
+                outLPv = server_output_directory + filename + ".lpv.res"  # output path for linearPartition-V
+                outLPc = server_output_directory + filename + ".lpc.res"  # output path for linearPartition-V
                 score_c, tc2, tc3, score_v, tv2, tv3 = request_ironcreek_lp(filename)
 
                 if score_c == "wrong" or score_v == "wrong":
@@ -552,12 +528,12 @@ def inputSeq_LP():
                         lst_c_mea += [i, j, float(a[2])]
 
                 # write results of lpv and lpc to a final partition.res result (json)
-                pairingFile = pairingDir + filename + ".partition.res"  # output with pairingName
+                pairingFile = pairing_result_directory + filename + ".partition.res"  # output with pairingName
                 # arc_pairing_single_json.LoadSave_lpv(pairingFile,seq,lst,t2,t3,beamsize,seqName,score2)
                 arc_pairing_single_json.LoadSave_lp2(
                     pairingFile, seq, lst_c, tc2, tc3, beamsize, seqName, score_c, lst_v, tv2, tv3, score_v
                 )
-                pairingFile_mea = pairingDir + filename + ".partition.mea.res"  # output with pairingName
+                pairingFile_mea = pairing_result_directory + filename + ".partition.mea.res"  # output with pairingName
                 arc_pairing_single_json.LoadSave_lp2(
                     pairingFile_mea,
                     seq,
@@ -632,7 +608,7 @@ def inputSeq():
             usrFile = flask.request.files["seqFile"]
             # filename += secure_filename(usrFile.filename)
             # filename = filename[:-4]
-            tmpPath = os.path.join(fileDir, "tmp")
+            tmpPath = os.path.join(user_data_directory, "tmp")
             usrFile.save(tmpPath)
             input_flag = True
 
@@ -694,7 +670,7 @@ def inputSeq():
                     return conMsg
             seqName = secure_filename(seqName)
             filename += seqName
-            newPath = os.path.join(fileDir, filename)
+            newPath = os.path.join(user_data_directory, filename)
             f = open(newPath, "w")
             f.write("{}\n{}\n{}".format(seqName, seq, beamsize))
             if is_constraint:
@@ -725,8 +701,8 @@ def inputSeq():
                 )  # call lc/lv functions in ironcreek, save results in files, return time
                 # print(filename)
 
-                outLc = ironcreekOutDir + filename + ".lc.res"  # output path for linearFold-C
-                outLv = ironcreekOutDir + filename + ".lv.res"  # output path for linearFold-V
+                outLc = server_output_directory + filename + ".lc.res"  # output path for linearFold-C
+                outLv = server_output_directory + filename + ".lv.res"  # output path for linearFold-V
 
                 f_lc = open(outLc, "r")
                 f_lv = open(outLv, "r")
@@ -748,7 +724,7 @@ def inputSeq():
                     "[time {}/{}s] [score {}/{}] [b {}] [LF file {}]".format(t1, t2, score1, score2, beamsize, filename)
                 )
                 # write results of lc, lv to a final pairing.res result
-                pairingFile = pairingDir + filename + ".pairing.res"  # output with pairingName
+                pairingFile = pairing_result_directory + filename + ".pairing.res"  # output with pairingName
                 arc_pairing_single_json.LoadSave(
                     pairingFile,
                     seq,
@@ -834,7 +810,7 @@ def inputSeq_LS_v():
             usrFile = flask.request.files["seqFile"]
             # filename += secure_filename(usrFile.filename)
             # filename = filename[:-4]
-            tmpPath = os.path.join(fileDir, "tmp")
+            tmpPath = os.path.join(user_data_directory, "tmp")
             usrFile.save(tmpPath)
             input_flag = True
 
@@ -861,7 +837,7 @@ def inputSeq_LS_v():
             seqName = secure_filename(seqName)
             filename += seqName
 
-            newPath = os.path.join(fileDir, filename)
+            newPath = os.path.join(user_data_directory, filename)
             f = open(newPath, "w")
             f.write("{}\n{}\n{}\n{}".format(seqName, seq, beamsize, samplesize))
             f.close()
@@ -886,7 +862,7 @@ def inputSeq_LS_v():
 
 
 def LS_v_core(filename, seq, seqName, beamsize, samplesize, T0, usrIP):
-    outLSv = ironcreekOutDir + filename + ".lsv.res"  # output path for linearSampling-V
+    outLSv = server_output_directory + filename + ".lsv.res"  # output path for linearSampling-V
     t = request_ironcreek_ls_v(filename)
     if t == "wrong" or t.startswith("error"):
         return "wrong"
@@ -896,7 +872,7 @@ def LS_v_core(filename, seq, seqName, beamsize, samplesize, T0, usrIP):
     print("[time {}s] [LS file {}]".format(t, filename))
 
     # write results of lsv to a final sampling.res result (json)
-    pairingFile = pairingDir + filename + ".sampling.res"  # output with pairingName
+    pairingFile = pairing_result_directory + filename + ".sampling.res"  # output with pairingName
     arc_pairing_single_json.LoadSave_ls(
         pairingFile, seq, outLSv, t, beamsize, seqName, samplesize, nDisp=min(18, int(samplesize))
     )
@@ -935,7 +911,7 @@ def preset_all():
 
 
 def addlog(logInfo):
-    os.system("echo {} >> {}".format(logInfo, logFile))
+    os.system("echo {} >> {}".format(logInfo, user_log_file))
     ### os.system("echo {} >> {}".format(logInfo, logFile))
     ### try:
     ###     os.system("cp {} {}".format(logFile, logFile2))
@@ -1079,7 +1055,7 @@ def check_constraint(seq, conSeq):
 def downloadRes(name, cv):
     # cv = 'c', or 'v', extension is .lc.res or .lv.res
     name0 = name.replace(".pairing.res", "")
-    attachfile = "{}{}.l{}.res".format(ironcreekOutDir, name0, cv)
+    attachfile = "{}{}.l{}.res".format(server_output_directory, name0, cv)
     clean_name = name0[name0.find("_") + 1 :] + "_linearfold-" + cv + ".txt"
     return flask.send_file(attachfile, mimetype="text/plain", attachment_filename=clean_name, as_attachment=True)
 
@@ -1088,7 +1064,7 @@ def downloadRes(name, cv):
 @app.route(os.path.join(samplingURL_v, "down_<name>"))
 def downloadLSRes(name):
     name0 = name.replace(".sampling.res", "")
-    attachfile = "{}{}.lsv.res".format(ironcreekOutDir, name0)
+    attachfile = "{}{}.lsv.res".format(server_output_directory, name0)
     clean_name = name0[name0.find("_") + 1 :] + "_linearsampling.txt"
     return flask.send_file(attachfile, mimetype="text/plain", attachment_filename=clean_name, as_attachment=True)
 
@@ -1202,7 +1178,7 @@ def inputSeq_LTF():  # purpose- create an output file to do what?
     # print(readFileName)
 
     # ltfBaseName = secure_filename(os.path.join(fileDir, 'LTF', jobID))
-    ltfBaseName = os.path.join(fileDir, "LTF", jobID)
+    ltfBaseName = os.path.join(user_data_directory, "LTF", jobID)
     print(ltfBaseName)
     upload_flag = False
     if "seqFile" in flask.request.files and flask.request.files["seqFile"].filename != "":
@@ -1255,16 +1231,16 @@ def inputSeq_LTF():  # purpose- create an output file to do what?
         f.write("{}\n{}\n{}\n{}\n".format(foldingBeam, alignmentBeam, iteration, Threshknot))
 
     outDirLTF1 = str(request_ironcreek_LTF(ltfBaseName), 'UTF-8')  # call this line 173
-    assert outDirLTF1 == ironcreekOutDir_LTF + jobID, "output to {}, not {}".format(
-        outDirLTF1, ironcreekOutDir_LTF + jobID
+    assert outDirLTF1 == server_output_directory + jobID, "output to {}, not {}".format(
+        outDirLTF1, server_output_directory + jobID
     )
-    print(outDirLTF1, LTFDir + "/" + jobID)
+    print(outDirLTF1, LTF_data_directory + "/" + jobID)
     # os.system('cp -r {} {}'.format(outDirLTF1, LTFDir))
-    cmd = "cp -r {} {}".format(outDirLTF1, LTFDir)
+    cmd = "cp -r {} {}".format(outDirLTF1, LTF_data_directory)
     print("+++" + cmd)
     os.system(cmd)
     # os.system('chmod 755 {}{}; chmod 744 {}{}/*'.format(LTFDir, jobID, LTFDir, jobID))
-    cmd = "chmod 755 {}{}; chmod 744 {}{}/*".format(LTFDir, jobID, LTFDir, jobID)
+    cmd = "chmod 755 {}{}; chmod 744 {}{}/*".format(LTF_data_directory, jobID, LTF_data_directory, jobID)
     os.system(cmd)
     print("+++" + cmd)
     # jobres is the output dir/ltfBaseName/out
@@ -1302,19 +1278,5 @@ def showRes_LTF_preset():
 
 
 if __name__ == "__main__":
-    # app.logger.debug('message processed')
-    app.logger.info("message processed")
-    # app.run(host='128.193.36.41', port=8001) #, debug=True) # flip.engr.oregonstate.edu
-    # app.run(host='73.67.241.185', port=8080) #, debug=True) # flop.engr.oregonstate.edu
-    # app.run(host='128.193.40.12', port=22) #, debug=True)  # web.engr.oregonstate.edu
-    # app.debug = True
-
     app.config["TEMPLATES_AUTO_RELOAD"] = True
-    if LOCAL_TESTING:
-        app.run(port=8080)  # local machine
-    else:
-        app.run(host="128.193.38.37", port=8080)  # linearfoldtest.eecs.oregonstate.edu
-
-    # app.run(host='0.0.0.0', port=8080 , debug=True)
-    # app.run(host='0.0.0.0') #, debug=True)
-    # app.run()
+    app.run(port=8080)
