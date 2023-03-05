@@ -26,18 +26,9 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
       </ul>
     </div>
 
-    <!-- Or <b>upload</b> a file in FASTA format: <br />
-    <div class="file-upload">
-      <div class="file-select">
-        <div class="file-select-button" id="fileName">Choose File</div>
-        <div class="file-select-name" id="noFile">No file chosen...</div>
-        <input type="file" name="seqFile" id="seqFile" accept=".txt, .fasta" /><br />
-      </div>
-    </div> -->
-
     <div class="mt-2 mb-4">
       <label for="formFile" class="form-label">Or <b>upload</b> a file in FASTA format </label>
-      <input class="form-control w-25" type="file" name="seqFile" id="seqFile" accept=".txt, .fasta" />
+      <input class="form-control w-75" type="file" name="seqFile" id="seqFile" accept=".txt, .fasta" />
     </div>
   </fieldset>
 
@@ -78,26 +69,14 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
       <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a>
       thermodynamic model, Lorenz et al 2011, with parameters from Mathews et al 2004)</label
     ><br />
-    <!--
-                    <input type="checkbox" id="vnbox" name="vnbox" value="vnbox" disabled>
-                    <label for="cfbox"><b>LinearPartition-V</b> </label><br>
-                    -->
   </fieldset>
-
-  <!-- <input type="submit" value="Run LinearFold >>" onclick="loading()" />&nbsp &nbsp &nbsp
-      <input type="reset" value="Reset" /> -->
 
   <br />
   <input type="submit" class="btn btn-primary" value="Run LinearFold" onclick="loading()" />
   <input type="reset" class="btn btn-secondary" value="Reset" />
 </form>
-<div id="loadingIMG" style="display: none">
-  <img src="https://raw.githubusercontent.com/KaiboLiu/PairingWebDemo/master/img/loading1.gif" alt="Loading..." height="160" />
-</div>
-
 {% endblock %} {% block info %}
 <br /><br />
-
 <fieldset>
   <div class="card">
     <legend>LinearPartition</legend>
@@ -131,21 +110,17 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
 <br />
 <div id="bottomInfo" style="font-size: 19px">
   <div id="LiangGroup">
-    <p></p>
-    <p>Please cite the following paper:</p>
-    <div style="font-size: 19px">
-      * Liang Huang, **He Zhang, **Dezhong Deng, Kai Zhao, Kaibo Liu, David Hendrix, and David H. Mathews (2019).
-      <b
-        ><a href="https://academic.oup.com/bioinformatics/article/35/14/i295/5529205" target="_blank"
-          >LinearFold: Linear-Time Approximate RNA Folding by 5’-to-3’ Dynamic Programming and Beam Search</a
-        ></b
-      >. <i>Bioinformatics</i>, Volume 35, Issue 14, July 2019, Pages i295–i304. ISMB 2019
-    </div>
-    *Corresponding Author, **Equal Contribution.
-
+    <legend>Please cite the following paper:</legend>
+    *Liang Huang, **He Zhang, **Dezhong Deng, Kai Zhao, Kaibo Liu, David Hendrix, and David H. Mathews (2019).
+    <b
+      ><a href="https://academic.oup.com/bioinformatics/article/35/14/i295/5529205" target="_blank"
+        >LinearFold: Linear-Time Approximate RNA Folding by 5'-to-3' Dynamic Programming and Beam Search</a
+      ></b
+    >. <i>Bioinformatics</i>, Volume 35, Issue 14, July 2019, Pages i295-i304. ISMB 2019
+    <p style="font-size: 80%">*Corresponding Author, **Equal Contribution</p>
     <div>
       Code:
-      <a href="https://github.com/LinearFold" class="fa fa-github" target="_blank" style="text-decoration: none"> github</a>
+      <a href="https://github.com/LinearFold" class="fa fa-github" target="_blank" style="text-decoration: none"> GitHub</a>
       (implemented by
       <b><a href="http://kaizhao.me" target="_blank">Kai Zhao</a></b
       >, <b><a href="https://dengdezhong.weebly.com/" target="_blank">Dezhong Deng</a></b
@@ -155,13 +130,9 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
     </div>
     <div>
       Web Demo designed by
-      <b><a href="https://kaiboliu.github.io" target="_blank">Kaibo Liu</a></b>
-      (liukaib_AT_oregonstate.edu)
+      <b><a href="https://kaiboliu.github.io" target="_blank">Kaibo Liu</a></b> (liukaib@oregonstate.edu) &
+      <b><a href="https://apoorvmalik.com" target="_blank">Apoorv Malik</a></b> (malikap@oregonstate.edu)
     </div>
-    <br />
-    <!--
-             <div style="font-size:14px">* Dezhong Deng, Kai Zhao, David Hendrix, David H. Mathews, and Liang Huang (2018). <I>Linear-Time Prediction of RNA Secondary Structures</I>. <a href="https://www.biorxiv.org/content/early/2018/02/14/263509" target="_blank">bioRxiv</a>.</div>
-             -->
   </div>
 </div>
 

@@ -28,7 +28,7 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
 
       <div class="mt-2 mb-4">
         <label for="formFile" class="form-label">Or <b>upload</b> a file in FASTA format </label>
-        <input class="form-control w-25" type="file" name="seqFile" id="seqFile" accept=".txt, .fasta" />
+        <input class="form-control w-75" type="file" name="seqFile" id="seqFile" accept=".txt, .fasta" />
       </div>
     </fieldset>
     <!--
@@ -58,37 +58,29 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
     <input type="submit" value="Run LinearPartition" class="btn btn-primary" onclick="loading()" />
     <input type="reset" value="Reset" class="btn btn-secondary" />
   </form>
-  <div id="loadingIMG" style="display: none">
-    <img src="https://raw.githubusercontent.com/KaiboLiu/PairingWebDemo/master/img/loading1.gif" alt="Loading..." height="160" />
-  </div>
 </fieldset>
-{% endblock %}
-<!--
-            <fieldset class="bigfield">
-                <legend>Preset demo</legend>
-		<p>Example demos for <span class="coloredSeq">16S rRNA</span>/<span class="coloredSeq">23S rRNA</span>/<span class="coloredSeq">Group I Intron</span> are available, compared with <a href="http://contra.stanford.edu/contrafold/" target="_blank">CONTRAfold v2.0</a> and <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a> algorithms. </p>
-		<a href="http://linearfold.eecs.oregonstate.edu/preset.html"><button type="button" id="jumpBtn">Go to demos >> </button></a>
-            </fieldset>
-            -->
-
-{% block info %}
+{% endblock %} {% block info %}
 <br />
 <div id="bottomInfo" style="font-size: 19px">
   <div id="LiangGroup">
-    <p></p>
-    <p>Please cite the following paper:</p>
-    <div style="font-size: 19px">
-      He Zhang, Liang Zhang, David H. Mathews and Liang Huang(2019).
-      <b
-        ><a href="https://arxiv.org/pdf/1912.13190.pdf" target="_blank"
-          >LinearPartition: Linear-Time Approximation of RNA Folding Partition Function and Base Pairing Probabilities</a
-        ></b
-      >. <i>arXiv Preprint</i>
-    </div>
-
+    <legend>Please cite the following paper:</legend>
+    He Zhang, Liang Zhang, David H. Mathews and Liang Huang(2019).
+    <b
+      ><a href="https://arxiv.org/pdf/1912.13190.pdf" target="_blank"
+        >LinearPartition: Linear-Time Approximation of RNA Folding Partition Function and Base Pairing Probabilities</a
+      ></b
+    >. <i>arXiv Preprint</i> <br /><br />
     <div>
-      Code: <a href="https://github.com/LinearFold/LinearPartition" class="fa fa-github" target="_blank" style="text-decoration: none"> github</a>
-      <!--(implemented by <b><a href="https://eecs.oregonstate.edu/people/Zhang-He" target="_blank">He Zhang</a></b>, and <b><a href="http://web.engr.oregonstate.edu/~huanlian/" target="_blank">Liang Huang</a></b>) -->
+      Code:
+      <a href="https://github.com/LinearFold/LinearPartition" class="fa fa-github" target="_blank" style="text-decoration: none"> GitHub</a>
+      (implemented by <b><a href="https://eecs.oregonstate.edu/people/Zhang-He" target="_blank">He Zhang</a></b
+      >, and <b><a href="http://web.engr.oregonstate.edu/~huanlian/" target="_blank">Liang Huang</a></b
+      >)
+      <div>
+        Web Demo designed by
+        <b><a href="https://kaiboliu.github.io" target="_blank">Kaibo Liu</a></b> (liukaib@oregonstate.edu) &
+        <b><a href="https://apoorvmalik.com" target="_blank">Apoorv Malik</a></b> (malikap@oregonstate.edu)
+      </div>
     </div>
     <!--<div style="font-size:14px">-->
     <!--
