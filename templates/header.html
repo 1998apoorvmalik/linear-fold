@@ -56,7 +56,7 @@
               <a id="partition" class="nav-link" aria-current="page" href="{{ url_for('my_form_LP') }}">LinearPartition</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="{{ url_for('my_form_LS_v') }}">LinearSampling</a>
+              <a id="sampling" class="nav-link" aria-current="page" href="{{ url_for('my_form_LS_v') }}">LinearSampling</a>
             </li>
             <li class="nav-item">
               <a id="linearturbofold" class="nav-link" href="{{ url_for('my_form_LTF') }}">LinearTurboFold</a>
@@ -111,5 +111,9 @@
     <br /><br />
     <script src="js/interface.js?v=101"></script>
     <script src="js/layout.js"></script>
+    <script>
+      // Do any required work
+      fileUploadListener();
+    </script>
   </body>
 </html>

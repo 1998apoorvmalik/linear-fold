@@ -8,37 +8,6 @@ function update_textarea(e) {
   $("#submit").prop("disabled", false);
 }
 
-$("#seqFile").bind("change", function () {
-  //function loaded(){
-  var filename = $("#seqFile").val();
-  console.log(filename);
-  if (/^\s*$/.test(filename)) {
-    $(".file-upload").removeClass("active");
-    $("#noFile").text("No file chosen...");
-  } else {
-    $(".file-upload").addClass("active");
-    //$("#noFile").text(filename);
-    $("#noFile").text(filename.replace("C:\\fakepath\\", ""));
-
-    var form_data = new FormData($("#seqFile")[0]);
-    console.log(form_data);
-    $.ajax({
-      type: "POST",
-      url: "/uploadajax",
-      data: form_data,
-      contentType: false,
-      cache: false,
-      processData: false,
-      async: true,
-      //async: false,
-      success: function (data) {
-        console.log("Success!");
-      },
-    });
-  }
-  //}
-});
-
 $("#constrBox").change(function () {
   var lst = $("#seqInput").val().split("\n");
   //var initial_seq1 = 'GGUUAAGCGACUAAGCGUACACGGUGGAUGCCCUGGCAGUCAGAGGCGAUGAAGG';
@@ -105,11 +74,6 @@ function sampleInputs(idx) {
 function loading() {
   console.log("loading gif");
   document.getElementById("loadingIMG").style = "display:block";
-  //document.getElementById('loadingIMG').innerHTML = '<img src="loading1.gif" alt="Loading..." height="160"></img>';
-  //document.getElementById('loadingIMG').innerHTML = '<img src="http://linearfold.eecs.oregonstate.edu:8080/static/img/loading1.gif" alt="Loading..." height="160"></img>';
-  //document.getElementById('loadingIMG').innerHTML = '<img src="https://raw.githubusercontent.com/KaiboLiu/PairingWebDemo/master/img/loading1.gif" alt="Loading..." height="160"><img>';
-  //document.getElementById('loadingIMG').src = "https://raw.githubusercontent.com/KaiboLiu/PairingWebDemo/master/img/loading1.gif";
-  //document.getElementById('loadingIMG').height = 160;
 }
 
 window.onload = function (e) {

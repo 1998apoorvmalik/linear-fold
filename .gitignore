@@ -3,7 +3,7 @@ __pycache__
 *.pyc%
 
 error.log
-usrLog.txt
+user_log.txt
 
 venv
 

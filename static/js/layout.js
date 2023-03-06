@@ -37,3 +37,21 @@ function loadLinearSankoffSample(index) {
     document.getElementById("seqInput").value = index;
   }
 }
+
+function fileUploadListener() {
+  const fileUpload = document.getElementById("SeqFile");
+  const fileContents = document.getElementById("seqInput");
+
+  if (fileUpload) {
+    fileUpload.addEventListener("change", function () {
+      const file = fileUpload.files[0];
+      const reader = new FileReader();
+      reader.addEventListener("load", function () {
+        if (fileContents) {
+          fileContents.value = reader.result;
+        }
+      });
+      reader.readAsText(file);
+    });
+  }
+}
