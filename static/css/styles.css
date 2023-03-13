@@ -47,6 +47,10 @@ body {
   clear: both;
 }
 
+.back-button {
+  width: 180px;
+}
+
 #mapdiv {
   top: 10px;
   width: 0px;

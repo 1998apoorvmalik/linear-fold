@@ -31,20 +31,29 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
 
     <fieldset>
       <legend>Arguments</legend>
-      <b>Beam size</b> (1-200):&nbsp&nbsp&nbsp&nbsp&nbsp
-      <input type="text" name="beamSize" id="beamSize" placeholder="100" maxlength="3" size="10" /><br />
-      <b>Sample size</b> (1-1000): <input type="text" name="sampleSize" id="sampleSize" placeholder="1000" maxlength="4" size="10" /><br />
+      <div class="form-group">
+        <label for="beamSize"><b>Beam size</b> (1-200):</label>
+        <input class="form-control w-25" type="text" name="beamSize" id="beamSize" placeholder="100" maxlength="3" size="10" />
+      </div>
+
+      <div class="form-group mt-2">
+        <label for="sampleSize"><b>Sample size</b> (1-1000):</label>
+        <input class="form-control w-25" type="text" name="sampleSize" id="sampleSize" placeholder="1000" maxlength="4" size="10" />
+      </div>
     </fieldset>
     <br />
 
     <fieldset>
       <legend>Available model</legend>
-      <input type="checkbox" id="vnbox" name="vnbox" value="vnbox" checked disabled />
-      <label for="vnbox"
-        ><b>LinearSampling-V</b> (using
-        <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a>
-        thermodynamic model, Lorenz et al 2011, with parameters from Mathews et al 2004)</label
-      ><br />
+
+      <div class="form-check mt-2">
+        <input class="form-check-input" type="checkbox" id="vnbox" name="vnbox" value="vnbox" checked disabled />
+        <label class="form-check-label" for="vnbox"
+          ><b>LinearSampling-V</b> (using
+          <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a>
+          thermodynamic model, Lorenz et al 2011, with parameters from Mathews et al 2004)</label
+        >
+      </div>
     </fieldset>
     <br />
 

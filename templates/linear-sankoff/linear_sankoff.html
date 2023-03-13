@@ -69,20 +69,66 @@ CCUGGCGGCGAUAGUGCGGUGGACCCACCUGAGACCAUACCGAACUCAGAAGUGAAACGCUGUAAUGCCGAUGGUAGUGU
     <div class="form-group mt-2 mb-2">
       <label for="bandwidth"> <b>Alignment Band Width</b> (0-100: 0 uses posterior probabilistic alignment region) </label>
       <input class="form-control w-25" type="text" name="LAw" id="bandwidth" placeholder="0" value="0" maxlength="3" size="10" />
+      <div class="invalid-feedback">Please choose a username.</div>
     </div>
 
-    <input type="checkbox" id="astar" name="astar" value="astar" checked />
-    <label for="cfbox"><b>Use A*</b></label
-    ><br />
+    <div class="form-check mt-2">
+      <input class="form-check-input" type="checkbox" id="astar" name="astar" value="astar" checked />
+      <label class="form-check-label" for="astar"><b>Use A*</b></label>
+    </div>
 
-    <input type="checkbox" id="branch" name="branch" value="branch" checked />
-    <label for="cfbox"><b>Domain Insertion</b></label
-    ><br />
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="branch" name="branch" value="branch" checked />
+      <label class="form-check-label" for="branch"><b>Domain Insertion</b></label>
+    </div>
   </fieldset>
   <br />
 
   <input type="submit" class="btn btn-primary" value="Run LinearSankoff" onclick="loading()" />
   <input type="reset" class="btn btn-secondary" value="Reset" />
 </form>
+
+<script>
+  // Get references to the input elements
+  const weightInput = document.getElementById("w");
+  const linearSankoffInput = document.getElementById("beamSize-b");
+  const linearFoldInput = document.getElementById("beamSize-LFb");
+  const energyDiffInput = document.getElementById("energyDiff");
+  const linearAlignmentInput = document.getElementById("beamSize-LAb");
+  const bandwidthInput = document.getElementById("bandwidth");
+
+  // Add event listeners to validate the input values when the user submits the form
+  document.querySelector("form").addEventListener("submit", function (event) {
+    if (parseFloat(weightInput.value) < 0 || parseFloat(weightInput.value) > 1) {
+      alert("The weight value must be between 0 and 1");
+      event.preventDefault();
+    }
+
+    if (parseInt(linearSankoffInput.value) < 1 || parseInt(linearSankoffInput.value) > 100) {
+      alert("The linear Sankoff beam size must be between 1 and 100");
+      event.preventDefault();
+    }
+
+    if (parseInt(linearFoldInput.value) < 1 || parseInt(linearFoldInput.value) > 100) {
+      alert("The linear fold beam size must be between 1 and 100");
+      event.preventDefault();
+    }
+
+    if (parseFloat(energyDiffInput.value) < 0 || parseFloat(energyDiffInput.value) > 1) {
+      alert("The maximum energy difference must be between 0 and 1");
+      event.preventDefault();
+    }
+
+    if (parseInt(linearAlignmentInput.value) < 1 || parseInt(linearAlignmentInput.value) > 100) {
+      alert("The linear alignment beam size must be between 1 and 100");
+      event.preventDefault();
+    }
+
+    if (parseInt(bandwidthInput.value) < 0 || parseInt(bandwidthInput.value) > 100) {
+      alert("The alignment bandwidth must be between 0 and 100");
+      event.preventDefault();
+    }
+  });
+</script>
 
 {% endblock %} {% block info %} {% include 'linear-sankoff/info-template.html' %} {% endblock %}

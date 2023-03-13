@@ -18,9 +18,35 @@
   document.head.appendChild(csslink);
 </script>
 
-<br />
+<!-- back button, redirects to linear sankoff page -->
+<button type="button" class="btn btn-secondary my-2 back-button" onclick="window.location.href = '/linearsankoff'">
+  ◄&nbsp&nbspBack to interface
+</button>
 
 <div id="result-page"></div>
+
+<div>
+  <h3>Result</h3>
+  <div class="res" style="font-family: monospace; letter-spacing: 1pt">
+    <p id="alignment-result" style="margin: 0px; padding: 0px; white-space: pre; overflow: scroll"></p>
+
+    <div class="mt-2">
+      <button type="button" class="btn btn-primary btn-sm" onclick="downloadResult()">Download Results</button>
+      <button type="button" onclick="copyOutput('alignment-result')" class="btn btn-secondary btn-sm">Copy to Clipboard</button>
+    </div>
+    <script>
+      const alignmenResult = {{ data["alignment_result"] | tojson }};
+      alignmenResult[2] = alignmenResult[2].replace(/\s/g, "&nbsp;");
+      document.getElementById("alignment-result").innerHTML = alignmenResult.join("<br>");
+    </script>
+  </div>
+  <p class="mt-2">
+    Sequence 1 Free Energy: <strong> {{ data["sequence 1 folding score"] }} kcal/mol</strong><br />
+    Sequence 2 Free Energy: <strong>{{ data["sequence 2 folding score"] }} kcal/mol</strong><br />
+    Log Probability of Alignment Path: <strong>{{ data["probability"] }}</strong><br />
+    Time: <strong>{{ data["time"] }} seconds</strong><br />
+  </p>
+</div>
 
 <h3>Figure</h3>
 <div class="form-check form-switch">
@@ -72,9 +98,9 @@
       function toggleFornaView() {
         fornaView = !fornaView;
         if (fornaView) {
-          document.getElementById("forna-view-button").innerHTML = "Hide Forna";
+          document.getElementById("forna-view-button").innerHTML = "Hide Forna&nbsp&nbsp▲";
         } else {
-          document.getElementById("forna-view-button").innerHTML = "Show Forna";
+          document.getElementById("forna-view-button").innerHTML = "Show Forna&nbsp&nbsp▼";
         }
       }
       toggleFornaView();
@@ -85,9 +111,11 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-6 col-md-12">
+        <h5>Sequence 1 (len: {{ data['structure 1'] | length }})</h5>
         <iframe id="forna-view-seq1" class="w-100" height="500"></iframe>
       </div>
       <div class="col-lg-6 col-md-12">
+        <h5>Sequence 2 (len: {{ data['structure 2'] | length }})</h5>
         <iframe id="forna-view-seq2" class="w-100" height="500"></iframe>
       </div>
     </div>
@@ -101,26 +129,6 @@
       FORNA_URL + "?id=fasta&file=%3Eheader%5Cn" + "{{ data['alignment 2'] }}".replace(/-/g, "") + "%5Cn" + "{{ data['structure 2'] }}";
   </script>
   <br />
-</div>
-
-<div>
-  <h3>Result</h3>
-  <div class="res" style="font-family: monospace; letter-spacing: 1pt">
-    <p id="alignment-result" style="margin: 0px; padding: 0px; white-space: pre; overflow: scroll"></p>
-    <button type="button" onclick="copyOutput('alignment-result')" class="btn btn-secondary btn-sm mt-2">Copy to Clipboard</button>
-    <script>
-      const alignmenResult = {{ data["alignment_result"] | tojson }};
-      alignmenResult[2] = alignmenResult[2].replace(/\s/g, "&nbsp;");
-      document.getElementById("alignment-result").innerHTML = alignmenResult.join("<br>");
-    </script>
-  </div>
-
-  <br />
-  <p>Sequence 1 Free Energy: {{ data["sequence 1 folding score"] }} kcal/mol</p>
-  <p>Sequence 2 Free Energy: {{ data["sequence 2 folding score"] }} kcal/mol</p>
-  <p>Log Probability of Alignment Path: {{ data["probability"] }}</p>
-  <p>Time: {{ data["time"] }} seconds</p>
-  <button type="button" class="btn btn-primary" onclick="downloadResult()">Download Results</button>
 </div>
 
 <script src="/js/jquery.min.js"></script>

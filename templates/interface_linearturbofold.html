@@ -48,34 +48,28 @@
                       <label for="vnboxModel" id="lfv_model"><b>LinearFold-V</b>（using <a href="https://www.tbi.univie.ac.at/RNA/" target="_blank">Vienna RNAfold</a> thermodynamic model, Lorenz et al 2011, with parameters from Mathews et al 2004）</label><br>
                     -->
   <!--beam size 1-->
+  <div class="form-group">
+    <label for="foldingBeam"><b>Folding Beam size</b> (1-1000):</label>
+    <input class="form-control w-25" type="text" name="foldingBeam" id="foldingBeam" placeholder="100" maxlength="3" size="10" />
+  </div>
 
-  <label for="foldingBeam"
-    ><b>Folding Beam Size</b>
-    <input type="text" name="foldingBeam" id="foldingBeam" placeholder="100" maxlength="3" size="10" value="" />
-  </label>
   <!--beam size 2-->
-  <br />
+  <div class="form-group mt-2">
+    <label for="alignmentBeam"><b>Alignment Beam Size</b></label>
+    <input class="form-control w-25" type="text" name="alignmentBeam" id="alignmentBeam" placeholder="100" maxlength="3" size="10" />
+  </div>
 
-  <label for="alignmentBeam"
-    ><b>Alignment Beam Size</b>
-    <input type="text" name="alignmentBeam" id="alignmentBeam" placeholder="100" maxlength="3" size="10" value="" />
-  </label>
-  <br />
   <!--Iteration -->
+  <div class="form-group mt-2">
+    <label for="iterationNum"><b>Iteration</b></label>
+    <input class="form-control w-25" type="text" name="iterationNum" id="iterationNum" placeholder="3" maxlength="3" size="10" />
+  </div>
 
-  <label for="iterationNum"
-    ><b>Iteration</b>
-    <input type="text" name="iterationNum" id="iterationNum" placeholder="3" maxlength="3" size="10" value="" />
-  </label>
-  <br />
   <!--Threshknot Threshold-->
-
-  <label for="ThreshknotNum"
-    ><b>Threshknot Threshold</b>
-    <input type="text" name="ThreshknotNum" id="ThreshknotNum" placeholder="0.3" maxlength="3" size="10" value="" />
-  </label>
-
-  <br />
+  <div class="form-group mt-2">
+    <label for="ThreshknotNum"><b>Threshknot Threshold</b></label>
+    <input class="form-control w-25" type="text" name="ThreshknotNum" id="ThreshknotNum" placeholder="0.3" maxlength="3" size="10" />
+  </div>
 
   <input type="text" name="jobID" id="jobID" placeholder="25" maxlength="20" size="10" value="123" hidden />
   <br />
