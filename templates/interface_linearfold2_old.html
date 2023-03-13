@@ -36,7 +36,7 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
     <legend>Arguments</legend>
     <div class="form-group mt-2">
       <label for="beamSize"><b>Beam Size</b> (LinearAlignment: 1 - 100)</label>
-      <input class="form-control w-25" type="text" name="beamSize" id="beamSize" placeholder="100" maxlength="3" size="10" />
+      <input class="form-control w-25" type="text" name="beamSize" id="beamSize" placeholder="100" value="100" maxlength="3" size="10" />
     </div>
 
     <div class="form-check mt-2">
@@ -83,9 +83,25 @@ name&#x0a;GCUCUGUUGGUGUAGUCCGGCCAAUCAUAUCACCCUCU
   </fieldset>
 
   <br />
-  <input type="submit" class="btn btn-primary" value="Run LinearFold" onclick="loading()" />
+  <input type="submit" class="btn btn-primary" value="Run LinearFold" />
   <input type="reset" class="btn btn-secondary" value="Reset" />
 </form>
+
+<script type="text/javascript" language="javascript">
+  // validate interface inputs
+  document.querySelector("form").addEventListener("submit", function (event) {
+    let validBeamSize = validateInput("beamSize", 1, 100);
+
+    if (validBeamSize) {
+      // all inputs are valid, continue with your code
+      loading();
+    } else {
+      // prevent the form from submitting
+      event.preventDefault();
+    }
+  });
+</script>
+
 {% endblock %} {% block info %}
 <br /><br />
 <fieldset>

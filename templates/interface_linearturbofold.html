@@ -50,30 +50,30 @@
   <!--beam size 1-->
   <div class="form-group">
     <label for="foldingBeam"><b>Folding Beam size</b> (1-1000):</label>
-    <input class="form-control w-25" type="text" name="foldingBeam" id="foldingBeam" placeholder="100" maxlength="3" size="10" />
+    <input class="form-control w-25" type="text" name="foldingBeam" id="foldingBeam" placeholder="100" value="100" maxlength="4" size="10" />
   </div>
 
   <!--beam size 2-->
   <div class="form-group mt-2">
-    <label for="alignmentBeam"><b>Alignment Beam Size</b></label>
-    <input class="form-control w-25" type="text" name="alignmentBeam" id="alignmentBeam" placeholder="100" maxlength="3" size="10" />
+    <label for="alignmentBeam"><b>Alignment Beam Size</b> (1-100):</label>
+    <input class="form-control w-25" type="text" name="alignmentBeam" id="alignmentBeam" placeholder="100" value="100" maxlength="3" size="10" />
   </div>
 
   <!--Iteration -->
   <div class="form-group mt-2">
-    <label for="iterationNum"><b>Iteration</b></label>
-    <input class="form-control w-25" type="text" name="iterationNum" id="iterationNum" placeholder="3" maxlength="3" size="10" />
+    <label for="iterationNum"><b>Iteration</b> (1-100):</label>
+    <input class="form-control w-25" type="text" name="iterationNum" id="iterationNum" placeholder="3" value="3" maxlength="3" size="10" />
   </div>
 
   <!--Threshknot Threshold-->
   <div class="form-group mt-2">
-    <label for="ThreshknotNum"><b>Threshknot Threshold</b></label>
-    <input class="form-control w-25" type="text" name="ThreshknotNum" id="ThreshknotNum" placeholder="0.3" maxlength="3" size="10" />
+    <label for="ThreshknotNum"><b>Threshknot Threshold</b> (0.0-1.0):</label>
+    <input class="form-control w-25" type="text" name="ThreshknotNum" id="ThreshknotNum" placeholder="0.3" value="0.3" maxlength="3" size="10" />
   </div>
 
   <input type="text" name="jobID" id="jobID" placeholder="25" maxlength="20" size="10" value="123" hidden />
   <br />
-  <input type="submit" id="submit" class="btn btn-primary" value="Run LinearTurboFold" onclick="loading()" />
+  <input type="submit" id="submit" class="btn btn-primary" value="Run LinearTurboFold" />
   <input
     type="reset"
     id="reset"
@@ -95,6 +95,24 @@
     <a href="{{ url_for('my_form_LP') }}"><button type="button" class="btn btn-primary">Go to LinearPartition >></button></a>
   </div>
 </div>
+
+<script type="text/javascript" language="javascript">
+  // validate interface inputs
+  document.querySelector("form").addEventListener("submit", function (event) {
+    let validFoldingBeam = validateInput("foldingBeam", 1, 1000);
+    let validAlignmentBeam = validateInput("alignmentBeam", 1, 100);
+    let validIterationNum = validateInput("iterationNum", 1, 100);
+    let validThreshknotNum = validateInput("ThreshknotNum", 0.0, 1.0);
+
+    if (validFoldingBeam && validAlignmentBeam && validIterationNum && validThreshknotNum) {
+      // all inputs are valid, continue with your code
+      loading();
+    } else {
+      // prevent the form from submitting
+      event.preventDefault();
+    }
+  });
+</script>
 
 {% endblock %} {% block info %}
 <br />
@@ -121,14 +139,6 @@
           </div>
           -->
   <!-- end of plugin-twitter-->
-
-  <script type="text/javascript" language="javascript">
-    var versionUpdate = new Date().getTime();
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = "/js/interface.js?v=" + versionUpdate;
-    document.body.appendChild(script);
-  </script>
-
-  {% endblock %}
 </div>
+
+{% endblock %}
