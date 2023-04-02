@@ -484,7 +484,7 @@ function applyRange25() {
   //for(insertThis in sequences){
   //    embedString+=selectThis.options[parseInt(sequences[insertThis])].innerHTML+ "&nbsp;";
   //}
-  embedString += '<div class="grid">';
+  embedString += "<div id='iframe-grid' class='grid' style ='width: 500px'>";
   gridCol = 1;
   for (item_ in sequences) {
     seqFornaNew = twentyFiveArray[sequences[item_]].seq.substring(oldStart - 1, oldEnd);
@@ -512,6 +512,10 @@ function applyRange25() {
   embedString += "</div>";
   embedString = embedString.replace(/,/g, "&nbsp;");
   $("#res-show").html(embedString);
+
+  // set iframe grid width to 75% of the screen
+  const viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) * 0.75;
+  document.getElementById("iframe-grid").style.width = viewportWidth + "px";
 }
 
 function applyRangeBest() {

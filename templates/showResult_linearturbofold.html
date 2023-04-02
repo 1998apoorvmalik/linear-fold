@@ -1,44 +1,46 @@
-{% extends "header_res.html" %} {% block content %}
-<div class="container">
-  <!-- <div class="card border-primary mb-3"> -->
-  <div>
-    <h4 id="resultTitle">LinearTurboFold Results</h4>
-    <br />
+{% extends "header.html" %} {% block content %}
 
-    <br />
-    Start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End
-    <br />
-    <input type="text" id="typePos1" name="typePos1" size="5" />
-    <input type="text" id="typePos2" name="typePos2" size="5" />
-    <button type="button" class="btn btn-primary btn-sm" onclick="applyRange25()">Apply Range</button>
-    <button type="button" class="btn btn-primary btn-sm" onclick="resetFunction()">Reset</button>
-    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(To use Apply Range, enter a starting and ending position within 1,000 nucleotides)
-    <br />
-    <p id="rangeNotice" class="text-primary"></p>
-    Select Sequences below
-    <br />
-    <!-- Evan Dropdown Menu-->
-    <!--
+<!-- LTF Specific dependencies -->
+<link rel="stylesheet" href="/css/showCircle_with_boots.css" />
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+<!-- End LTF Specific dependencies -->
+
+<div class="result-page"></div>
+<div>
+  <h4 id="resultTitle">LinearTurboFold Results</h4>
+  Start &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End
+  <br />
+  <input type="text" id="typePos1" name="typePos1" size="5" />
+  <input type="text" id="typePos2" name="typePos2" size="5" />
+  <button type="button" class="btn btn-primary btn-sm" onclick="applyRange25()">Apply Range</button>
+  <button type="button" class="btn btn-primary btn-sm" onclick="resetFunction()">Reset</button>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(To use Apply Range, enter a starting and ending position within 1,000 nucleotides)
+  <br />
+  <p id="rangeNotice" class="text-primary"></p>
+  Select Sequences below
+  <br />
+  <!-- Evan Dropdown Menu-->
+  <!--
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
         -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
-    <div class="container" id="seqOptions">
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="form-group">
-            <select
-              class="selectpicker"
-              id="seqSelect"
-              multiple
-              data-width="fit"
-              data-actions-box="true"
-              title="Choose one or more sequences"
-              data-container=".container"
-            >
-              <!--<optgroup label="SARS-CoV-2">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+  <div class="container" id="seqOptions">
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="form-group">
+          <select
+            class="selectpicker"
+            id="seqSelect"
+            multiple
+            data-width="fit"
+            data-actions-box="true"
+            title="Choose one or more sequences"
+            data-container=".container"
+          >
+            <!--<optgroup label="SARS-CoV-2">
                     <option value=0 data-subtext=">NC_045512.2_Wuhan_seafood_market_pneumonia_virus_isolate_Wuhan-Hu-1__complete_genome:">NC_045512.2</option>
                     <option value=1 data-subtext=">hCoV-19_Sweden_20-53189_2020_EPI_ISL_648168_2020-10-13_Europe:">EPI_ISL_648168</option>
                     <option value=2 data-subtext=">hCoV-19_Sweden_20-53470_2020_EPI_ISL_710589_2020-11-19_Europe:">EPI_ISL_710589</option>
@@ -70,27 +72,26 @@
                     <option value=24 data-subtext=">BetaCoV_bat_Yunnan_RatG13_2013_EPI_ISL_402131:">EPI_ISL_402131</option>
                   </optgroup>
                 -->
-            </select>
-          </div>
+          </select>
         </div>
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-
-        <br />
       </div>
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+      <br />
     </div>
-
-    <p><span id="res-show" class="res" style="color: black; display: inline-block"></span></p>
-
-    <!-- Back to top button -->
-    <a id="return-to-top"></a>
   </div>
 
-  <div id="tooltipbox" class="tooltipbox"></div>
-  <p id="path" hidden>{{pairingRes}}</p>
-  <p id="inputSeqType" hidden>{{seqType}}</p>
-  <p id="username" hidden>{{username}}</p>
-  <p id="jobname" hidden>{{jobname}}</p>
+  <p><span id="res-show" class="res" style="color: black; display: inline-block"></span></p>
+
+  <!-- Back to top button -->
+  <a id="return-to-top"></a>
 </div>
+
+<div id="tooltipbox" class="tooltipbox"></div>
+<p id="path" hidden>{{pairingRes}}</p>
+<p id="inputSeqType" hidden>{{seqType}}</p>
+<p id="username" hidden>{{username}}</p>
+<p id="jobname" hidden>{{jobname}}</p>
 
 <!-- <script src="/js/demo_tooltips.js"></script>
 <script src="/js/showDesign_cn.js"></script> -->
@@ -108,8 +109,5 @@
   script.src = "/js/showLTF_dynamic.js?v=" + versionUpdate;
   document.body.appendChild(script);
 </script>
-<!-- </head> -->
 
-<!-- </body>
-</html> -->
 {% endblock %}
