@@ -1,12 +1,14 @@
-let pageName = window.location.href.split("/").pop();
-let pageElement = document.getElementById(pageName);
-
-// check is page exist
-if (pageElement) {
-  // add class active to page
-  pageElement.classList.add("active");
+// set the active tab
+let pageUrl = window.location.href;
+if (pageUrl.includes("partition")) {
+  document.getElementById("partition").classList.add("active");
+} else if (pageUrl.includes("linearsankoff")) {
+  document.getElementById("linearsankoff").classList.add("active");
+} else if (pageUrl.includes("sampling")) {
+  document.getElementById("sampling").classList.add("active");
+} else if (pageUrl.includes("linearturbofold")) {
+  document.getElementById("linearturbofold").classList.add("active");
 } else {
-  // add class active to home page
   document.getElementById("linearfold").classList.add("active");
 }
 
@@ -58,7 +60,7 @@ const LS_SAMPLES = [
   ">B00650 118\nGCCUGGUGGCUAUGGCGAGGAGGCCUAACCCGAUCCCAUCCCGAACUCGGCCGUUAAACUCCUCAGUGCCGAUGGUACUAUGUCUUAAGACCUGGGAGAGUAGGUCGUCGCCAGGCCU\n>B01704 115\nCCUGGCGGCGAUAGUGCGGUGGACCCACCUGAGACCAUACCGAACUCAGAAGUGAAACGCUGUAAUGCCGAUGGUAGUGUGGGGUUUCCCCAUGUGAGAGUAGGGCACCGCCGGG",
 ];
 
-if (pageName == "linearsankoff") {
+if (pageUrl.includes("linearsankoff")) {
   document.getElementById("footer").classList.add("disabled");
 }
 

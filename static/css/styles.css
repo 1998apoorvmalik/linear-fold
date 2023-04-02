@@ -7,7 +7,7 @@ body {
  *         max-width: 60rem;
  *             width: 1200px;
  *                 */
-  max-width: 80%;
+  max-width: 90%;
   margin: auto;
 }
 
@@ -16,7 +16,7 @@ body {
   display: block;
   font-size: 18px;
   padding: 5px 7px;
-  background-color: burlywood;
+  background-color: #ffc107;
   margin: 2em auto;
   text-align: center;
   border-radius: 5px;
@@ -24,7 +24,6 @@ body {
   /* fixed width font */
   font-family: monospace;
 }
-
 .card {
   background-color: #eff0f2;
   padding: 16px;
