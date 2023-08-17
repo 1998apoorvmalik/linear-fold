@@ -38,7 +38,7 @@ const deselectAllButton = document.getElementById("deselectAll");
 // Highlight and tooltip properties
 const tooltip = document.getElementById("tooltip");
 const tooltipSampleText =
-  "(Sample Tooltip Text)<br>Index: i<br>Pair: (x, y)<br>Distance: d<br><br>Nucleotide Statistics<br>20% A<br>20% C<br>20% G<br>20% U<br>20% -<br><br>Pair Statistics<br>10% GC<br>15% CG<br>20% AU<br>15% UA<br>10% GU<br>10% UG<br>10% --<br> 5% X- or -X<br> 5% unpaired";
+  "(Sample Tooltip Text)<br>Index: i<br>Pair: (x, y)<br>Distance: d<br><br>Nucleotide Statistics<br>20% A<br>20% C<br>20% G<br>20% U<br>20% -<br><br>Pair Statistics<br>10% GC<br>15% CG<br>20% AU<br>15% UA<br>10% GU<br>10% UG<br>10% --<br> 5% X- or -X<br> 5% unpairable";
 const highlightColor = "#f0ad4e";
 const tooltipXOffsetSlider = document.getElementById("tooltipXOffset");
 const tooltipYOffsetSlider = document.getElementById("tooltipYOffset");
@@ -179,13 +179,14 @@ function getColumnStatistics(index) {
   allNucs.forEach((key) => {
     if (counts[key] === undefined) counts[key] = 0;
     var numPercent = ((counts[key] / total) * 100).toFixed(1);
-    if (numPercent.endsWith(".0")) numPercent = numPercent.slice(0, -2); // Remove trailing .0
+    // if (numPercent.endsWith(".0")) numPercent = numPercent.slice(0, -2); // Remove trailing .0
     maxPercentLength = Math.max(maxPercentLength, numPercent.length);
     percentArray.push(numPercent);
   });
 
   allNucs.forEach((key, index) => {
     var numPercent = percentArray[index];
+    if (numPercent === "0.0") return;
     // If numPercent length is less than maxPercentLength, add spaces to the beginning
     if (numPercent.length < maxPercentLength) numPercent = "&nbsp".repeat(maxPercentLength - numPercent.length) + numPercent;
     percentageStats += `${numPercent}%&nbsp${key}<br>`;
@@ -196,7 +197,7 @@ function getColumnStatistics(index) {
 
 function getPairStatistics(index1, index2) {
   if (index2 < index1) return getPairStatistics(index2, index1);
-  const allPairsArray = ["GC", "CG", "AU", "UA", "GU", "UG", "--", "X- or -X", "unpaired"];
+  const allPairsArray = ["GC", "CG", "AU", "UA", "GU", "UG", "--", "X- or -X", "unpairable"];
   const allPairsSet = new Set(allPairsArray.slice(0, -2));
   const columns1 = Array.from(document.querySelectorAll(`.sequence-column[sequence-index='${index1 + 1}']`)).slice(1);
   const columns2 = Array.from(document.querySelectorAll(`.sequence-column[sequence-index='${index2 + 1}']`)).slice(1);
@@ -208,7 +209,7 @@ function getPairStatistics(index1, index2) {
 
     var pair = `${char1}${char2}`;
     if (pair !== "--" && (char1 === "-" || char2 === "-")) pair = "X- or -X"; // gap-nuc or nuc-gap pair
-    else if (!allPairsSet.has(pair)) pair = "unpaired"; // not a valid pair, eg: AC
+    else if (!allPairsSet.has(pair)) pair = "unpairable"; // not a valid pair, eg: AC
 
     counts[pair] = counts[pair] ? counts[pair] + 1 : 1;
   });
@@ -221,13 +222,14 @@ function getPairStatistics(index1, index2) {
   allPairsArray.forEach((pair) => {
     if (counts[pair] === undefined) counts[pair] = 0;
     var numPercent = ((counts[pair] / total) * 100).toFixed(1);
-    if (numPercent.endsWith(".0")) numPercent = numPercent.slice(0, -2); // Remove trailing .0
+    // if (numPercent.endsWith(".0")) numPercent = numPercent.slice(0, -2); // Remove trailing .0
     maxPercentLength = Math.max(maxPercentLength, numPercent.length);
     percentArray.push(numPercent);
   });
 
   allPairsArray.forEach((pair, index) => {
     var numPercent = percentArray[index];
+    if (numPercent === "0.0") return;
     // If numPercent length is less than maxPercentLength, add spaces to the beginning
     if (numPercent.length < maxPercentLength) numPercent = "&nbsp".repeat(maxPercentLength - numPercent.length) + numPercent;
     percentageStats += `${numPercent}%&nbsp${pair}<br>`;
