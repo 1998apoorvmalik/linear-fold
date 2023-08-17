@@ -28,6 +28,7 @@ partitionURL = "/partition"
 partitionURL_v = "/partition_v"
 samplingURL_v = "/sampling"
 sankoffURL = "/linearsankoff"
+alifoldURL = "/linear-alifold"
 
 ltfURL = "/linearturbofold"
 turboFoldCOVIDURL = "/linearturbofold_SarsCov2"
@@ -91,6 +92,59 @@ def my_form_LS():
         return flask.render_template("linear-sankoff/showResult_linearsankoff.html", data=data)
 
     return flask.render_template("linear-sankoff/linear_sankoff.html")
+
+@app.route(alifoldURL, methods=("GET", "POST"))
+def my_form_LAF():
+    def extract_sequences_and_names(fasta_content):
+        sequence_names = []
+        sequences = []
+        current_sequence = ''
+        
+        for line in fasta_content.split('\n'):
+            if line.startswith('>'):
+                if current_sequence:  # If there's a sequence stored, append it to the list
+                    sequences.append(current_sequence)
+                    current_sequence = ''
+                sequence_names.append(line[1:])
+            else:
+                current_sequence += line
+
+        if current_sequence:  # To handle the last sequence
+            sequences.append(current_sequence)
+            
+        return sequence_names, sequences
+    
+    if request.method == "POST":
+        url = "http://10.217.112.122:7001/linear-alifold"  # remote server
+
+        seq_input = request.form.get("seqInput", "").strip()
+        if not seq_input:
+            return "No sequence input provided", 400
+        
+        # add newline to end of sequence input if not already present
+        if not seq_input.endswith('\n'):
+            seq_input += '\t\n'
+
+        arguments = {
+            "seq": seq_input,
+            "beamSize": int(request.form.get("beamSize", 0)),  # default to 0 if not provided
+            "energyModel": request.form.get("energyModel", ""),  # default to empty string if not provided
+            "multiApprox": "multi-approx" in request.form,  # multi-approx
+        }
+
+        try:
+            response = requests.post(url, json=arguments)
+            response.raise_for_status()
+            data = response.json()
+        except requests.RequestException as e:
+            return f"Error: {e}", 500
+
+        data['seq-names'], data['seqs'] = extract_sequences_and_names(seq_input)
+        return flask.render_template("linear-alifold/output.html", data=data)
+
+    return flask.render_template("linear-alifold/interface.html")
+
+
 
 @app.route('/linearsankoff-pdf/')
 def show_linearsankoff_pdf():

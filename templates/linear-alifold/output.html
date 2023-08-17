@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+{% extends "header.html" %} {% block content %}
+<script>
+  const FORNA_URL = "https://forna-server.herokuapp.com/";
+</script>
+
+<link rel="stylesheet" href="css/styles.css" />
+<script src="https://d3js.org/d3.v6.min.js"></script>
+
+<!-- Force The Browser To Reload Cached .JS, .CSS Files To Reflect The Latest Changes To Those     Files -->
+<script type="text/javascript" language="javascript">
+  var versionUpdate = new Date().getTime();
+  var csslink = document.createElement("link");
+  csslink.rel = "stylesheet";
+  csslink.type = "text/css";
+  csslink.href = "/css/interface.css?v=" + versionUpdate;
+  document.head.appendChild(csslink);
+</script>
+
+<div class="row mb-3">
+  <!-- Back button, on its own line on small screens -->
+  <div class="col-12 col-sm-auto mb-2 mb-sm-0">
+    <button type="button" class="btn btn-secondary back-button" onclick="window.location.href = '/linear-alifold'">
+      ◄&nbsp&nbspBack to interface
+    </button>
+  </div>
+
+  <!-- Select Sequences dropdown, on its own line on small screens -->
+  <div class="col-12 col-sm mb-2 mb-sm-0">
+    <div class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button" id="sequenceDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        Select Sequences to Display
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="sequenceDropdown" id="sequenceCheckboxes">
+        <li>
+          <input type="text" class="form-control" id="searchSequence" placeholder="Search sequences..." />
+        </li>
+        <li class="d-flex mt-1">
+          <button class="btn btn-sm btn-primary flex-equal" id="selectAll">Select All</button>
+          <div class="mx-1"></div>
+          <button class="btn btn-sm btn-secondary flex-equal" id="deselectAll">Deselect All</button>
+        </li>
+        <li role="separator" class="dropdown-divider"></li>
+        <!-- Checkboxes will be populated dynamically -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- Score element, left-aligned on small screens and right-aligned on medium screens and above -->
+  <div class="col-12 col-sm-auto text-sm-start text-sm-end">
+    <h4 style="display: inline-block; margin-top: 6px">Folding Score: {{ data.score }}</h4>
+  </div>
+</div>
+
+<div id="result-page"></div>
+
+<!-- Apply Range section (will take up half the row on medium screens and above) -->
+<div class="mb-2">
+  <div>
+    <h5 style="display: inline-block">Apply Range</h5>
+    <small style="display: inline-block"> (To use Apply Range, enter a starting and ending position within 1,000 nucleotides) </small>
+  </div>
+  <div class="range-selector mt-1">
+    <label for="start">Start:</label>
+    <input class="rounded-input" style="margin-right: 10px" type="number" id="start" min="1" max="100000" value="1" />
+
+    <label for="end">End:</label>
+    <input class="rounded-input" style="margin-right: 10px" type="number" id="end" min="1" max="100000" value="100" />
+
+    <button class="btn btn-primary btn-sm" style="margin-bottom: 3px" id="applyRange">Apply</button>
+    <button class="btn btn-secondary btn-sm" style="margin-bottom: 3px" id="resetRange">Reset</button>
+  </div>
+</div>
+
+<div class="mb-3">
+  <!-- Separate div for Offset sliders -->
+  <label for="tooltipXOffset"><h5>Highlight Tooltip Offsets</h5></label>
+  <div class="row">
+    <!-- For tooltipXOffset slider -->
+    <div class="col-md-6 d-flex align-items-center">
+      <label for="tooltipXOffset" class="mb-0 me-2">X:</label>
+      <input type="range" class="form-range w-100" id="tooltipXOffset" min="-250" max="250" value="-75" />
+    </div>
+
+    <!-- For tooltipYOffset slider -->
+    <div class="col-md-6 d-flex align-items-center">
+      <label for="tooltipYOffset" class="mb-0 me-2">Y:</label>
+      <input type="range" class="form-range w-100" id="tooltipYOffset" min="-250" max="250" value="-50" />
+    </div>
+  </div>
+</div>
+
+<label for="widthAdjuster"><h5>Adjust Position</h5></label>
+<input type="range" class="form-range" id="widthAdjuster" min="100" max="900" value="300" />
+
+<div class="secondary-structure" id="secondaryStructure"></div>
+<div class="sequences" id="sequences"></div>
+<div id="tooltip"></div>
+
+<script src="/js/jquery.min.js"></script>
+
+<script type="text/javascript" language="javascript">
+  var versionUpdate = new Date().getTime();
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src = "/js/interface.js?v=" + versionUpdate;
+  document.body.appendChild(script);
+</script>
+
+<script>
+  // Set consensusSecondaryStructure from Flask-rendered data
+  var consensusSecondaryStructure = "{{ data.consensusStructure }}";
+
+  // Set alignedSequences from Flask-rendered data
+  const alignedSequences = [
+    {% for sequence in data.seqs %}
+      "{{ sequence|trim }}",
+    {% endfor %}
+  ];
+
+  // Set sequenceNames from Flask-rendered data
+  const sequenceNames = [
+    {% for name in data['seq-names'] %}
+      "{{ name|trim }}",
+    {% endfor %}
+  ];
+</script>
+
+<!-- Include your external script -->
+<script src="js/linear_alifold.js?v=101"></script>
+{% endblock %} {% block info %} {% include 'linear-alifold/info-template.html' %} {% endblock %}

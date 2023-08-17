@@ -54,3 +54,99 @@ body {
   top: 10px;
   width: 0px;
 }
+
+/* LinearAliFold CSS */
+.container {
+  width: 80%;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.secondary-structure {
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+}
+
+.sequences {
+  display: grid;
+  grid-gap: 10px;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+}
+
+.sequence-name {
+  width: 20vw;
+  font-family: "Arial", sans-serif;
+  color: #0d6efd;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sequence-row {
+  display: flex;
+  align-items: start;
+}
+
+.sequence-chunk-spacer {
+  height: 20px; /* adjust as needed */
+}
+
+.sequence-content {
+  max-width: calc(50ch + 50 * 2px);
+}
+
+.sequence-column {
+  display: inline-block;
+  margin: 0 2px;
+  cursor: pointer;
+  white-space: nowrap; /* Prevent breaking inside a sequence character */
+}
+
+.flex-equal {
+  flex: 1;
+}
+
+.dropdown-menu li {
+  padding: 1px 10px; /* Adjust as needed */
+}
+
+.range-selector,
+.select-sequences {
+  padding-bottom: 15px;
+}
+
+.rounded-input {
+  border-radius: 5px; /* Adjust as needed */
+  border: 1px solid #ced4da; /* Bootstrap's default border color */
+  padding: 0.1rem 0rem 0.1rem 0.4rem; /* Bootstrap's default padding */
+  font-size: 1rem; /* Bootstrap's default font-size */
+  line-height: 1.5; /* Bootstrap's default line-height */
+  color: #495057; /* Bootstrap's default text color */
+  background-color: #fff; /* White background */
+  background-clip: padding-box; /* Keeps the background color within the border and padding */
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; /* Smooth transition for hover and focus states */
+}
+
+.rounded-input:focus {
+  border-color: #80bdff; /* Bootstrap's default focus border color */
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Bootstrap's default focus shadow */
+}
+
+#tooltip {
+  display: none;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12px;
+
+  position: absolute;
+  padding: 5px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+}

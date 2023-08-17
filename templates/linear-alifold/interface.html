@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+{% extends "header.html" %} {% block content %}
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
+
+<form method="POST" class="userSeq" enctype="multipart/form-data">
+  <fieldset>
+    <legend>Add a pair of sequences</legend>
+    <b>Paste</b> or <b>type</b> your pair of sequences here (MSA length &lt; 100,000):
+    <br />
+    <div class="form-group">
+      <textarea class="form-control" name="seqInput" id="seqInput" rows="5" cols="80">
+>seq1
+cucacaacguuugugccucaguuacccguagauguagu
+>seq2
+ucgacaccacu---gccucgguuacccaucggugcagu</textarea
+      >
+    </div>
+  </fieldset>
+  <div class="dropdown mt-1">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Samples</button>
+    <ul class="dropdown-menu">
+      <li>
+        <button class="dropdown-item" type="button" onclick="loadLinearAliFoldSample(0)">Sample 1 (MSA length: n=38, MSA depth: k=2)</button>
+      </li>
+      <li>
+        <button class="dropdown-item" type="button" onclick="loadLinearAliFoldSample(1)">Sample 2 (MSA length: n=93, MSA depth: k=20)</button>
+      </li>
+      <li>
+        <button class="dropdown-item" type="button" onclick="loadLinearAliFoldSample(2)">Sample 3 (MSA length: n=123, MSA depth: k=30)</button>
+      </li>
+      <li>
+        <button class="dropdown-item" type="button" onclick="loadLinearAliFoldSample(3)">Sample 4 (MSA length: n=1577, MSA depth: k=30)</button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="mt-2 mb-4">
+    <label for="SeqFile" class="form-label">Or <b>upload</b> a file in FASTA format </label>
+    <input class="form-control w-75" type="file" name="SeqFile" id="SeqFile" accept=".txt, .fasta" />
+  </div>
+
+  <fieldset>
+    <legend>Arguments</legend>
+
+    <div class="form-group mt-2">
+      <label for="beamSize"><b>Beam Size</b> (LinearAliFold: 1 - 1000)</label>
+      <input class="form-control w-25" type="text" name="beamSize" id="beamSize" placeholder="100" value="100" maxlength="3" size="10" />
+    </div>
+
+    <div class="form-group mt-2">
+      <label for="dropdownMenuButton"><b>Select Energy Model</b></label>
+      <button
+        class="form-control dropdown-toggle w-25"
+        type="button"
+        id="energyModelDropdownSelector"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        Andronescu et al. 20XX model
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="energyModelDropdownSelector">
+        <li><a class="dropdown-item em-value" data-value="em1">Vienna RNAfold model (Mathews et al., 2004)</a></li>
+        <li><a class="dropdown-item em-value" data-value="em2">Andronescu's BL* parameter (Andronescu et al., 2010)</a></li>
+      </ul>
+      <input type="hidden" id="energyModel" name="energyModel" value="em2" />
+    </div>
+
+    <div class="form-check mt-2">
+      <input class="form-check-input" type="checkbox" id="multi-approx" name="multi-approx" value="multi-approx" />
+      <label class="form-check-label" for="multi-approx"><b>Approximate no. of unpaired bases in MultiLoop </b></label>
+    </div>
+  </fieldset>
+  <br />
+
+  <input type="submit" class="btn btn-primary" value="Run LinearAliFold" />
+  <input type="reset" class="btn btn-secondary" value="Reset" />
+</form>
+
+<script>
+  // validate interface inputs
+  document.querySelector("form").addEventListener("submit", function (event) {
+    let validB = validateInput("beamSize", 0, 1000);
+    if (validB) {
+      // all inputs are valid
+      loading();
+    } else {
+      // prevent the form from submitting
+      event.preventDefault();
+    }
+  });
+</script>
+
+{% endblock %} {% block info %} {% include 'linear-alifold/info-template.html' %} {% endblock %}
