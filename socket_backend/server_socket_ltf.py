@@ -10,9 +10,15 @@ import socket  # import socket module
 from dirs import outDir, create_dirs
 
 s = socket.socket()  # creat socket object
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 host = socket.gethostname()  # get local host name
 port = 11118  # set port
-s.bind((host, port))  # bind port
+
+# clear port
+os.system("fuser -k %d/tcp" % port)
+
+# bind port
+s.bind((host, port))
 
 # create dirs if not exist
 create_dirs()
@@ -29,7 +35,7 @@ while True:
         c.send(bytes("no data file found", encoding="utf-8"))
         c.close()
         continue
-    try:
+    try:        
         print("input file located at " + inFile_fasta)
         print(time.asctime() + ", client address", addr)
         outDirLTF = outDir + os.path.basename(inFileName)  # output dir for LTF
@@ -45,11 +51,11 @@ while True:
 
         time_s = time.time()
 
-        cmd = "./LinearTurboFold/linearturbofold -i {} -o {} --b1 {} --b2 {} --it {} --th {}".format(
+        cmd = "./programs/LinearTurboFold/linearturbofold -i {} -o {} --b1 {} --b2 {} --it {} --th {}".format(
             inFile_fasta, outDirLTF, b1, b2, its, th
         )
         os.system(cmd)
-        cmd = "python3 ./LinearTurboFold/combine_results.py {}".format(outDirLTF)
+        cmd = "python3 ./programs/LinearTurboFold/combine_results.py {}".format(outDirLTF)
         os.system(cmd)
         os.system("chmod 775 {}".format(outDirLTF))
         # os.system("chmod a+r {}".format(outLTF))

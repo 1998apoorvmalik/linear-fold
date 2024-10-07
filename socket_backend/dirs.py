@@ -35,4 +35,5 @@ def cleaner():
         print("[INFO] tmp directory cleaned successfully")
         
 if __name__ == "__main__":
+    print("[Info] Starting Cleaner")
     cleaner()

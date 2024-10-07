@@ -10,17 +10,27 @@ import socket  # import socket module
 # directory for user's input and output
 from dirs import usrDir, outDir, create_dirs
 
+# print python version
+print("python version: ", end="")
+os.system("python3 --version")
+
 s = socket.socket()  # creat socket object
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 host = socket.gethostname()  # get local host name
 port = 11111  # set port
-s.bind((host, port))  # bind port
+
+# clear port
+os.system("fuser -k %d/tcp" % port)
+
+# bind port
+s.bind((host, port))
 
 # create dirs if not exist
 create_dirs()
 
 beamsize = 100
 
-LD = "export CXX=/usr/local/common/gcc-4.9.0/bin/g++; export CC=/usr/local/common/gcc-4.9.0/bin/gcc; export LD_LIBRARY_PATH=/usr/local/common/gcc-4.9.0/lib64"
+# LD = "export CXX=/usr/local/common/gcc-4.9.0/bin/g++; export CC=/usr/local/common/gcc-4.9.0/bin/gcc; export LD_LIBRARY_PATH=/usr/local/common/gcc-4.9.0/lib64"
 s.listen(5)  # wait for users's connect
 while True:
     c, addr = s.accept()  # built connection
@@ -58,10 +68,10 @@ while True:
     # os.system("{}; /scratch/dengde/fastdecode/fastcky_vienna/fastcky/build/beamckypar -f {} -b {} > {}".format(LD, tmpSeqFile, beamsize, outLv) ) ## linearfold-v
     # os.system("cat {} | /scratch/liukaib/call_linearfold_v -b {} > {}".format(tmpSeqFile, beamsize, outLv) ) ## linearfold-v, Vincent version
     if conSeq is None:
-        os.system("echo {} | /scratch/liukaib/call_linearfold -V -b {} {} > {}".format(seq, beamsize, is_zuker, outLv))
+        os.system("echo {} | ./programs/LinearFold/linearfold -v -V -b {} {} > {}".format(seq, beamsize, is_zuker, outLv))
     else:
         os.system(
-            'echo -e "{}\n{}" | /scratch/liukaib/call_linearfold -V -b {} --constraints > {}'.format(
+            'echo -e "{}\n{}" | ./programs/LinearFold/linearfold -v -V -b {} --constraints > {}'.format(
                 seq, conSeq, beamsize, outLv
             )
         )

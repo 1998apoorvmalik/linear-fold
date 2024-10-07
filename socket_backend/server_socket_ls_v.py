@@ -10,9 +10,15 @@ import socket  # import socket module
 from dirs import usrDir, outDir, create_dirs
 
 s = socket.socket()  # creat socket object
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 host = socket.gethostname()  # get local host name
 port = 31111  # set port
-s.bind((host, port))  # bind port
+
+# clear port
+os.system("fuser -k %d/tcp" % port)
+
+# bind port
+s.bind((host, port))
 
 # create dirs if not exist
 create_dirs()
@@ -46,7 +52,7 @@ while True:
         c.close()  # close connection
 
     time_s = time.time()
-    cmd = "echo {} | /scratch/liukaib/call_linearsampling -b {} -k {} --verbose > {}".format(
+    cmd = "echo {} | ./programs/LinearSampling/linearsampling -b {} -k {} --verbose > {}".format(
         seq, beamsize, samplesize, outLs
     )
 

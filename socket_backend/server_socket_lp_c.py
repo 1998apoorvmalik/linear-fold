@@ -12,10 +12,21 @@ import re
 # directory for user's input and output
 from dirs import usrDir, outDir, create_dirs
 
+# print python version
+print("python version: ", end="")
+os.system("python3 --version")
+
 s = socket.socket()  # creat socket object
+# Set the SO_REUSEADDR option to force binding
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 host = socket.gethostname()  # get local host name
 port = 21110  # set port
-s.bind((host, port))  # bind port
+
+# clear port
+os.system("fuser -k %d/tcp" % port)
+
+# bind port
+s.bind((host, port))
 
 # create dirs if not exist
 create_dirs()
@@ -44,20 +55,28 @@ while True:
     fileIn.close()
     """
 
-    cmd = 'sed -n "2p" {} | /scratch/liukaib/call_linearpartition -r {} --MEA --MEA_output {} --verbose -c 0.01'.format(
+    cmd = 'sed -n "2p" {} | ./programs/LinearPartition/linearpartition -r {} --mea --mea_prefix {} --verbose -c 0.01'.format(
         inFile, outLPc, outLPcMEA
     )
-    vb = subprocess.check_output(cmd, shell=True).decode("utf-8")
+    
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+    stdout, stderr = process.communicate()  # Communicates with the process (send/receive data)
+    vb = stdout.decode("utf-8") + stderr.decode("utf-8")
+
+    score_pattern = r"Coefficient:\s*(-?\d+\.\d+)\s*"
+    t2_pattern = r"Partition Function Calculation Time:\s*(\d+\.\d+)\s*seconds"
+    t3_pattern = r"Base Pairing Probabilities Calculation Time:\s*(\d+\.\d+)\s*seconds"
 
     try:
-        score = re.findall("Coefficient: ([\-0-9]+[.0-9]{0,3})", vb)[0]
-        t2 = re.findall("Function Calculation Time: ([0-9]+[.0-9]{0,3})", vb)[0]
-        t3 = re.findall("Probabilities Calculation Time: ([0-9]+[.0-9]{0,3})", vb)[0]
+        score = re.findall(score_pattern, vb)[0]
+        t2 = re.findall(t2_pattern, vb)[0]
+        t3 = re.findall(t3_pattern, vb)[0]
+
         os.system("chmod a+r {}".format(outLPc))
+        os.rename(f"{outLPcMEA}_1", outLPcMEA)  # rename the output
         os.system("chmod a+r {}".format(outLPcMEA))
 
         c.send(bytes(str(score + "|" + t2 + "|" + t3), encoding="utf-8"))
-
     except Exception:
         c.send(bytes("wrong|0|0", encoding="utf-8"))
         print("subprocess failed: " + cmd)

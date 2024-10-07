@@ -10,10 +10,20 @@ import socket  # import socket module
 # directory for user's input and output
 from dirs import usrDir, outDir, create_dirs
 
+# print python version
+print("python version: ", end="")
+os.system("python3 --version")
+
 s = socket.socket()  # creat socket object
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 host = socket.gethostname()  # get local host name
 port = 11110  # set port
-s.bind((host, port))  # bind port
+
+# clear port
+os.system("fuser -k %d/tcp" % port)
+
+# bind port
+s.bind((host, port))
 
 # create dirs if not exist
 create_dirs()
@@ -59,11 +69,11 @@ while True:
     # os.system("cat {} | /scratch/liukaib/call_linearfold_v -b {} > {}".format(tmpSeqFile, beamsize, outLv) ) ## linearfold-v, Vincent version
     if conSeq is None:
         os.system(
-            "echo {} | /scratch/liukaib/call_linearfold -b {} {} > {}".format(seq, beamsize, is_zuker, outLc)
+            "echo {} | ./programs/LinearFold/linearfold -v -b {} {} > {}".format(seq, beamsize, is_zuker, outLc)
         )  ## linearfold-c, Vincent version
     else:
         os.system(
-            'echo -e "{}\n{}" | /scratch/liukaib/call_linearfold -b {} --constraints > {}'.format(
+            'echo -e "{}\n{}" | ./programs/LinearFold/linearfold -v -b {} --constraints > {}'.format(
                 seq, conSeq, beamsize, outLc
             )
         )  ## linearfold-c with constraints

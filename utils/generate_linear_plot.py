@@ -1,3 +1,6 @@
+# Author: Apoorv Malik (malikap@oregonstate.edu)
+# Description: Used for generating static plot for Linear Sankoff output
+
 import io
 
 import matplotlib.pyplot as plt

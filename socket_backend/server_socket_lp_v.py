@@ -13,9 +13,16 @@ import re
 from dirs import usrDir, outDir, create_dirs
 
 s = socket.socket()  # creat socket object
+# Set the SO_REUSEADDR option to force binding
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 host = socket.gethostname()  # get local host name
 port = 21111  # set port
-s.bind((host, port))  # bind port
+
+# clear port
+os.system("fuser -k %d/tcp" % port)
+
+# bind port
+s.bind((host, port))
 
 # create dirs if not exist
 create_dirs()
@@ -43,16 +50,25 @@ while True:
     fileIn.close()
     """
 
-    cmd = 'sed -n "2p" {} | /scratch/liukaib/call_linearpartition -V -r {} --MEA --MEA_output {} --verbose -c 0.01'.format(
+    cmd = 'sed -n "2p" {} | ./programs/LinearPartition/linearpartition -V -r {} --mea --mea_prefix {} --verbose -c 0.01'.format(
         inFile, outLPv, outLPvMEA
     )
-    vb = subprocess.check_output(cmd, shell=True).decode("utf-8")
+
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+    stdout, stderr = process.communicate()  # Communicates with the process (send/receive data)
+    vb = stdout.decode("utf-8") + stderr.decode("utf-8")
+
+    score_pattern = r"Free Energy of Ensemble:\s*(-?\d+\.\d+)\s*kcal/mol"
+    t2_pattern = r"Partition Function Calculation Time:\s*(\d+\.\d+)\s*seconds"
+    t3_pattern = r"Base Pairing Probabilities Calculation Time:\s*(\d+\.\d+)\s*seconds"
 
     try:
-        score = re.findall("Ensemble: ([\-0-9]+[.0-9]{0,3})", vb)[0]
-        t2 = re.findall("Function Calculation Time: ([0-9]+[.0-9]{0,3})", vb)[0]
-        t3 = re.findall("Probabilities Calculation Time: ([0-9]+[.0-9]{0,3})", vb)[0]
+        score = re.findall(score_pattern, vb)[0]
+        t2 = re.findall(t2_pattern, vb)[0]
+        t3 = re.findall(t3_pattern, vb)[0]
+
         os.system("chmod a+r {}".format(outLPv))
+        os.rename(f"{outLPvMEA}_1", outLPvMEA)  # rename the output
         os.system("chmod a+r {}".format(outLPvMEA))
 
         c.send(bytes(str(score + "|" + t2 + "|" + t3), encoding="utf-8"))
