@@ -107,6 +107,18 @@ document.querySelectorAll(".em-value").forEach((item) => {
     input.value = e.target.getAttribute("data-value");
   });
 });
+
+// query selector for the mode dropdown
+document.querySelectorAll(".mode-value").forEach((item) => {
+  item.addEventListener("click", (e) => {
+    e.preventDefault();
+    const btn = document.getElementById("modeDropdownSelector");
+    const input = document.getElementById("mode");
+    btn.textContent = e.target.textContent;
+    input.value = e.target.getAttribute("data-value");
+  });
+});
+
 // -----------------------------------------------------------------------------------------------------------------------------------------------------
 
 // .

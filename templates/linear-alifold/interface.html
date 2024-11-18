@@ -66,10 +66,30 @@ ucgacaccacu---gccucgguuacccaucggugcagu</textarea
       <input type="hidden" id="energyModel" name="energyModel" value="em2" />
     </div>
 
-    <div class="form-check mt-2">
+    <!-- input for running either MFE, MEA or Threshknot Mode -->
+    <div class="form-group mt-2">
+      <label for="dropdownMenuButton"><b>Select Mode</b></label>
+      <button
+        class="form-control dropdown-toggle w-25"
+        type="button"
+        id="modeDropdownSelector"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        Threshknot
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="modeDropdownSelector">
+        <li><a class="dropdown-item mode-value" data-value="mfe">MFE (Minimum Free Energy)</a></li>
+        <li><a class="dropdown-item mode-value" data-value="mea">MEA (Maximum Expected Accuracy)</a></li>
+        <li><a class="dropdown-item mode-value" data-value="threshknot">Threshknot</a></li>
+      </ul>
+      <input type="hidden" id="mode" name="mode" value="threshknot" />
+    </div>
+
+    <!-- <div class="form-check mt-2">
       <input class="form-check-input" type="checkbox" id="multi-approx" name="multi-approx" value="multi-approx" />
       <label class="form-check-label" for="multi-approx"><b>Approximate no. of unpaired bases in MultiLoop </b></label>
-    </div>
+    </div> -->
   </fieldset>
   <br />
 

@@ -26,6 +26,13 @@
     </button>
   </div>
 
+  <!-- Download Structure button, on its own line on small screens -->
+  <div class="col-12 col-sm-auto mb-2 mb-sm-0">
+    <button type="button" class="btn btn-primary" id="downloadStructure" onclick="downloadStructure()">
+      Download Structure
+    </button>
+  </div>
+
   <!-- Select Sequences dropdown, on its own line on small screens -->
   <div class="col-12 col-sm mb-2 mb-sm-0">
     <div class="dropdown">
@@ -49,7 +56,14 @@
 
   <!-- Score element, left-aligned on small screens and right-aligned on medium screens and above -->
   <div class="col-12 col-sm-auto text-sm-start text-sm-end">
-    <h4 style="display: inline-block; margin-top: 6px">Folding Score: {{ data.score }}</h4>
+    <!-- <h4 style="display: inline-block; margin-top: 6px">Folding Score: {{ data.score }}</h4> -->
+    <h4 style="display: inline-block; margin-top: 6px">
+      {% if data.mode == "mfe" %}
+        Folding Score: {{ data.score }} kcal/mol
+      {% else %}
+        Free energy of Ensemble: {{ data.score }} kcal/mol
+      {% endif %}
+    </h4>
   </div>
 </div>
 
@@ -125,6 +139,23 @@
       "{{ name|trim }}",
     {% endfor %}
   ];
+
+  // Download Structure button
+  function downloadStructure() {
+    // Convert the JS string to a Blob
+    var blob = new Blob([consensusSecondaryStructure], { type: 'text/javascript' });
+    
+    // Create an anchor (<a>) element
+    var downloadLink = document.createElement('a');
+    downloadLink.href = window.URL.createObjectURL(blob);
+    downloadLink.download = "consensus-structure.txt"; // The file name of the downloaded file
+    
+    // Append the anchor to the body, click it, and then remove it
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }
+
 </script>
 
 <!-- Include your external script -->

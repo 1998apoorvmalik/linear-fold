@@ -16,11 +16,15 @@ from dirs import user_data_directory, server_output_directory, pairing_result_di
 
 app = flask.Flask(__name__, static_url_path="", static_folder="static", template_folder="templates")
 
+# app.config['SERVER_NAME'] = '127.0.0.1'
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 flask_cors.CORS(app)
 
 pairingName, total_time = "", 0
+
+backend_host_url = "10.217.112.20"
+# backend_host_url = "http://eng-kec2094-dvorak"
 
 demoURL = "/"
 demoURL_v = "/v"
@@ -33,6 +37,10 @@ alifoldURL = "/linear-alifold"
 ltfURL = "/linearturbofold"
 turboFoldCOVIDURL = "/linearturbofold_SarsCov2"
 
+
+@app.route("/motifs")
+def motifs_page():
+    return redirect(url_for("motifs", _external=True))
 
 # bothCVURL = '/'    # used to keep previous version, 2 circle polts + preset demo
 @app.route(demoURL_v)
@@ -72,8 +80,7 @@ def index():
 @app.route(sankoffURL, methods=("GET", "POST"))
 def my_form_LS():
     if request.method == "POST":
-        url = "http://10.217.112.122:7001/linear-sankoff"  # remote server
-
+        url = os.path.join("http://" + backend_host_url + ":7001", "linear-sankoff") # remote server
         arguments = {
             "seq": request.form["seqInput"],
             "w": float(request.form["w"]),
@@ -93,6 +100,7 @@ def my_form_LS():
 
     return flask.render_template("linear-sankoff/linear_sankoff.html")
 
+# Linear Alifold
 @app.route(alifoldURL, methods=("GET", "POST"))
 def my_form_LAF():
     def extract_sequences_and_names(fasta_content):
@@ -115,7 +123,7 @@ def my_form_LAF():
         return sequence_names, sequences
     
     if request.method == "POST":
-        url = "http://10.217.112.122:7001/linear-alifold"  # remote server
+        url = os.path.join("http://" + backend_host_url + ":7001", "linear-alifold") # remote server
 
         seq_input = request.form.get("seqInput", "").strip()
         if not seq_input:
@@ -130,6 +138,7 @@ def my_form_LAF():
             "beamSize": int(request.form.get("beamSize", 0)),  # default to 0 if not provided
             "energyModel": request.form.get("energyModel", ""),  # default to empty string if not provided
             "multiApprox": "multi-approx" in request.form,  # multi-approx
+            "mode": request.form.get("mode", ""),  # default to empty string if not provided
         }
 
         try:
@@ -271,16 +280,17 @@ def LF_v_core(filename, seq, seqName, beamsize, T0, usrIP, conSeq=None, dld_cmt=
     f_lv = open(outLv, "r")
     lv = f_lv.readlines()
     f_lv.close()
-    print(outLv)
 
-    line_idx_t, line_idx_s, line_idx_res = 1, 2, 3  # Vincent version
-    t2 = "".join(re.findall("Time: ([0-9]+[.0-9]{0,3})", lv[line_idx_t]))
-    score2 = "".join(re.findall("Score: ([\-0-9]+[.0-9]{0,3})", lv[line_idx_s]))  # Vincent version
+    tmp1, tmp2 = lv[-1].strip().split(" "), lv[-2].strip()
+    structure2 = tmp1[0]
+    score2 = tmp1[-1][1:-1]
+    t2 = re.search(r"Time: ([0-9]+\.[0-9]+)", tmp2).group(1)
+    
     print("[time {}s] [score {}] [b {}] [LF file {}]".format(t2, score2, beamsize, filename))
     # write results of lc, lv to a final pairing.res result
     pairingFile = pairing_result_directory + filename + ".pairing.res"  # output with pairingName
     arc_pairing_single_json.LoadSave_lv(
-        pairingFile, seq, lv[line_idx_res][:-1], t2, beamsize, seqName, score2, conSeq
+        pairingFile, seq, structure2, t2, beamsize, seqName, score2, conSeq
     )  # Vincent version
 
     T1 = time.time() - T0
@@ -766,24 +776,27 @@ def inputSeq():
                 f_lc.close()
                 f_lv.close()
 
-                print(outLc)
-                # line_idx_t, line_idx_s, line_idx_res = 4, 3, 6  # Dezhong version
-                line_idx_t, line_idx_s, line_idx_res = 1, 2, 3  # Vincent version
-                t1 = "".join(re.findall("Time: ([0-9]+[.0-9]{0,3})", lc[line_idx_t]))
-                t2 = "".join(re.findall("Time: ([0-9]+[.0-9]{0,3})", lv[line_idx_t]))
-                score1 = "".join(re.findall("Score: ([\-0-9]+[.0-9]{0,3})", lc[line_idx_s]))
-                score2 = "".join(re.findall("Score: ([\-0-9]+[.0-9]{0,3})", lv[line_idx_s]))  # Vincent version
-                # score2 = '{0:.2f}'.format(float(''.join(re.findall('score: ([\-0-9]+[.0-9]{0,3})',lv[3])))/(-100)) # Dezhong version
+                tmp1, tmp2 = lc[-1].strip().split(" "), lc[-2].strip()
+                structure1 = tmp1[0]
+                score1 = tmp1[-1][1:-1]
+                t1 = re.search(r"Time: ([0-9]+\.[0-9]+)", tmp2).group(1)
+
+                tmp1, tmp2 = lv[-1].strip().split(" "), lv[-2].strip()
+                structure2 = tmp1[0]
+                score2 = tmp1[-1][1:-1]
+                t2 = re.search(r"Time: ([0-9]+\.[0-9]+)", tmp2).group(1)
+
                 print(
                     "[time {}/{}s] [score {}/{}] [b {}] [LF file {}]".format(t1, t2, score1, score2, beamsize, filename)
                 )
+
                 # write results of lc, lv to a final pairing.res result
                 pairingFile = pairing_result_directory + filename + ".pairing.res"  # output with pairingName
                 arc_pairing_single_json.LoadSave(
                     pairingFile,
                     seq,
-                    lc[line_idx_res][:-1],
-                    lv[line_idx_res][:-1],
+                    structure1,
+                    structure2,
                     t1,
                     t2,
                     beamsize,
@@ -975,7 +988,7 @@ def addlog(logInfo):
 
 def request_ironcreek(seqfile):
     s1, s2 = socket.socket(), socket.socket()  # creat socket object
-    host = "ironcreek.eecs.oregonstate.edu"
+    host = backend_host_url
     port1, port2 = 11110, 11111  # set port
 
     s1.connect((host, port1))
@@ -994,7 +1007,7 @@ def request_ironcreek(seqfile):
 
 def request_ironcreek_v(seqfile):
     s2 = socket.socket()  # creat socket object
-    host = "ironcreek.eecs.oregonstate.edu"
+    host = backend_host_url
     port2 = 11111  # set port
 
     s2.connect((host, port2))
@@ -1009,7 +1022,7 @@ def request_ironcreek_v(seqfile):
 
 def request_ironcreek_lp(seqfile):
     s3, s4 = socket.socket(), socket.socket()  # creat socket object
-    host = "ironcreek.eecs.oregonstate.edu"
+    host = backend_host_url
     port3, port4 = 21110, 21111  # set port
 
     s3.connect((host, port3))
@@ -1031,7 +1044,7 @@ def request_ironcreek_lp(seqfile):
 
 def request_ironcreek_lp_v(seqfile):
     s4 = socket.socket()  # creat socket object
-    host = "ironcreek.eecs.oregonstate.edu"
+    host = backend_host_url
     port4 = 21111  # set port
 
     s4.connect((host, port4))
@@ -1047,7 +1060,7 @@ def request_ironcreek_lp_v(seqfile):
 
 def request_ironcreek_ls_v(seqfile):
     s4 = socket.socket()  # creat socket object
-    host = "ironcreek.eecs.oregonstate.edu"
+    host = backend_host_url
     port4 = 31111  # set port
 
     s4.connect((host, port4))
@@ -1304,7 +1317,7 @@ def inputSeq_LTF():  # purpose- create an output file to do what?
 
 def request_ironcreek_LTF(seqfile):
     s2 = socket.socket()
-    host = "ironcreek.eecs.oregonstate.edu"
+    host = backend_host_url
     port2 = 11118
     s2.connect((host, port2))
     s2.send(bytes(seqfile,'UTF-8'))
@@ -1333,4 +1346,4 @@ def showRes_LTF_preset():
 
 if __name__ == "__main__":
     app.config["TEMPLATES_AUTO_RELOAD"] = True
-    app.run(port=8080)
+    app.run(port=8090, debug=True)
