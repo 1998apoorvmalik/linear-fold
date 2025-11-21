@@ -39,6 +39,10 @@ turboFoldCOVIDURL = "/linearturbofold_SarsCov2"
 
 
 @app.route("/motifs")
+def motifs_redirect():
+    return redirect("/motifserver", code=302)  # Temporary redirect (use 301 for permanent)
+
+@app.route("/motifserver")
 def motifs_page():
     return redirect(url_for("motifs", _external=True))
 
