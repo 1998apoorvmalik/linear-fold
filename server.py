@@ -10,8 +10,6 @@ from flask import Flask, jsonify, request
 
 from utils.generate_linear_plot import draw  # noqa
 
-port = 7001
-os.system("fuser -k %d/tcp" % port)
 
 app = Flask(__name__)
 

@@ -14,8 +14,9 @@ tmux new-session -d -s ltf-backend "$VENV && python3 ${DIR}server_socket_ltf.py;
 tmux new-session -d -s backend-cleaner "$VENV && python3 ${DIR}dirs.py; bash"
 
 # LinearAlifold and LinearSankoff backend 
-LSNK_PORT=7943
+LSNK_PORT=7001
 fuser -k $LSNK_PORT/tcp
+pkill gunicorn
 tmux new-session -d -s lsnk-backend "$VENV && gunicorn --timeout 600 -w 4 -b 0.0.0.0:$LSNK_PORT 'server:app'"   # linear sankoff backend
 
 # show the server processes
